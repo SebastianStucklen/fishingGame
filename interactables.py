@@ -41,14 +41,14 @@ class FishingHole:
 		for j in range(length):
 			IPUT = 'void'
 			while True:
-				maxtime = length*0.8
+				maxtime = length*2
 				for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						doExit = True
 
 				IPUT = self.inputs()
 
-				timer += 0.0167
+				timer += delta/10
 
 				draw.rect(screen, (255,0,0), ((0 + SCREEN_RECT.width / 4), (SCREEN_RECT.centery - 100), (SCREEN_RECT.width / 2), 50))
 				draw.rect(screen, (255,255,255), ((0 + SCREEN_RECT.width / 4 +timer * ((SCREEN_RECT.width / 2)/maxtime)), (SCREEN_RECT.centery - 100), (SCREEN_RECT.width / 2 - timer * ((SCREEN_RECT.width / 2)/maxtime)), 50))
@@ -60,7 +60,7 @@ class FishingHole:
 					screen.blit(letterData[j][0],(letterData[j][1],letterData[j][2]))
 					break
 				if timer >= maxtime:
-					# print("FAIL")
+					print("FAIL")
 					pass
 
 			player.append(IPUT)

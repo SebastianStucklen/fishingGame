@@ -2,6 +2,7 @@ from pygame.math import Vector2
 from pygame import Rect
 import pygame
 import math
+from typing import Callable, Any
 
 SCREEN_SIZE = (1600, 900)
 SCREEN_RECT = Rect(0, 0, SCREEN_SIZE[0], SCREEN_SIZE[1])
@@ -32,19 +33,22 @@ class CursorTools:
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			return True
 
-	def playerInteract(self,objPos:Rect, playerPos: Vector2, range: int = 200):
+	def playerInteract(self,objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 300):
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
 				if pygame.mouse.get_pressed()[0]:
-					return True		
+					return function()
 			else:
 				self.canClick = False
 
 	def customCursor(self):
-		if pygame.mouse.get_visible():
-			pygame.mouse.set_visible(False)
+		# if pygame.mouse.get_visible():
+		# 	pygame.mouse.set_visible(False)
+		print(pygame.mouse.get_cursor())
 		if self.canClick:
-			self.screen.blit(self.clickable, pygame.mouse.get_pos())
+			pygame.mouse.set_cursor((0, 0), self.clickable)
+			# self.screen.blit(self.clickable, pygame.mouse.get_pos())
 		else:
-			self.screen.blit(self.default, pygame.mouse.get_pos())
+			pygame.mouse.set_cursor((0, 0), self.default)
+			# self.screen.blit(self.default, pygame.mouse.get_pos())
