@@ -13,9 +13,10 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_SIZE))
 
 defaultImg = pygame.image.load("default.png")
-clickableImg = pygame.image.load("clickable.png")
+# clickableImg = pygame.image.load("clickable.png")
+interactImg = pygame.image.load("interact.png")
 
-ct = CursorTools(screen,defaultImg,clickableImg)
+ct = CursorTools(screen,defaultImg,interactImg)
 
 guy = Player(1)
 lake = FishingHole()
@@ -40,16 +41,17 @@ while not doExit:
 	if ct.playerInteract(lake.rect,guy.centerpos, lambda: lake.quicktime(screen,delta,whatfish[1])):
 		print(whatfish)
 		guy.inventory.append(speciesGen(whatfish[0]))
+		for i in range(len(guy.inventory)-1):
+			guy.inventory[i].toggleInventoryView()
 		print(guy.inventory)
 
 	lake.draw(screen)
 	guy.update(delta,screen)
-	ct.customCursor()
-	inv.update(screen,guy.inventory,32,(0,0,0))
-
+	# inv.update(screen,guy.inventory,32,(0,0,0))
 	for i in range(len(guy.inventory)):
 		guy.inventory[i].caughtDisplay(screen)
-		ct.playerInteract(lake.rect,guy.centerpos,	guy.inventory[i].toggleInventoryView)
-	
+		ct.playerInteract(guy.inventory[i].close, guy.centerpos, lambda: guy.inventory[i].toggleInventoryView(), 1600)
+
+	ct.customCursor()
 	pygame.display.flip()
 pygame.quit()

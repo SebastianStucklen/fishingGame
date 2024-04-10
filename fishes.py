@@ -3,7 +3,9 @@ from pygame import image
 from pygame import transform
 from globals import SCREEN_RECT
 from pygame import draw
+from pygame import Rect
 
+close = image.load('resources/close.png')
 placeholder = image.load('resources/placeholder.png')
 common1 = image.load('resources/common1.png')
 common2 = image.load('resources/common2.png')
@@ -24,7 +26,7 @@ class Fishes:
 
         self.caughtImg = self.baseImg #transform.scale_by(self.baseImg,self.size)
         self.inventoryImg = transform.scale_by(self.baseImg,0.2)
-
+        self.close = Rect(0,0,0,0)
         self.bigView = True
 
         self.description = [
@@ -35,7 +37,7 @@ class Fishes:
             "testtest"
         ]
     def caughtDisplay(self,screen:pygame.Surface):
-        if self.bigView:
+        if self.bigView == True:
             font = pygame.font.Font(None, 60)
             line = 450-100 #out of 800
             imgRect = self.caughtImg.get_rect()
@@ -51,13 +53,13 @@ class Fishes:
                 line+=100
                 screen.blit(text, (textrect.x,line))
             
-            draw.rect(screen, (255,0,0), (imgRect.right+20, imgRect.top, 50,50))
-            return 
+            screen.blit(close, (imgRect.right+20, imgRect.top))
+            self.close = Rect(imgRect.right+20, imgRect.top, 65,65)
     
 
 
     def toggleInventoryView(self):
-        self.bigView = not self.bigView
+        self.bigView = False
 
 class Common1(Fishes):
     baseImg = common1

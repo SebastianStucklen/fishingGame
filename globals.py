@@ -11,6 +11,8 @@ FPS = 60
 WHITE = (255,255,255)
 GREEN = (20,235,0)
 
+
+
 class TextDisplay:
 	def __init__(self, text, x: float, y: float,size):
 		if text == None: text = ""
@@ -33,7 +35,7 @@ class CursorTools:
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			return True
 
-	def playerInteract(self,objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 300):
+	def playerInteract(self,objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400):
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
@@ -45,10 +47,9 @@ class CursorTools:
 	def customCursor(self):
 		# if pygame.mouse.get_visible():
 		# 	pygame.mouse.set_visible(False)
-		print(pygame.mouse.get_cursor())
 		if self.canClick:
-			pygame.mouse.set_cursor((0, 0), self.clickable)
-			# self.screen.blit(self.clickable, pygame.mouse.get_pos())
-		else:
-			pygame.mouse.set_cursor((0, 0), self.default)
+			# pygame.mouse.set_cursor((0, 0), self.clickable)
+			self.screen.blit(self.clickable, pygame.mouse.get_pos())
+		# else:
+			# pygame.mouse.set_cursor((0, 0), self.default)
 			# self.screen.blit(self.default, pygame.mouse.get_pos())
