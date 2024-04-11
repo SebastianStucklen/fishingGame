@@ -11,7 +11,9 @@ FPS = 60
 WHITE = (255,255,255)
 GREEN = (20,235,0)
 
-
+from pygame import mixer
+mixer.init()
+click = mixer.Sound("resources/click.wav")
 
 class TextDisplay:
 	def __init__(self, text, x: float, y: float,size):
@@ -40,6 +42,7 @@ class CursorTools:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
 				if pygame.mouse.get_pressed()[0]:
+					click.play()
 					return function()
 			else:
 				self.canClick = False
