@@ -37,11 +37,11 @@ class CursorTools:
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			return True
 
-	def playerInteract(self,objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400):
+	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400, teste3: bool = True):
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
-				if pygame.mouse.get_pressed()[0]:
+				if pygame.mouse.get_pressed()[0] and teste3:
 					click.play()
 					return function()
 			else:

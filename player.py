@@ -65,16 +65,16 @@ class Player:
 		keys = pygame.key.get_pressed()
 		###LEFT AND RIGHT
 		if keys[pygame.K_a]:
-			self.vel.x = -180
+			self.vel.x = -220
 		if keys[pygame.K_d]:
-			self.vel.x = 180
+			self.vel.x = 220
 		if not keys[pygame.K_a] and not keys[pygame.K_d]:
 			self.vel.x = 0
 		###UP AND DOWN
 		if keys[pygame.K_w]:
-			self.vel.y = -180
+			self.vel.y = -220
 		if keys[pygame.K_s]:
-			self.vel.y = 180
+			self.vel.y = 220
 		if not keys[pygame.K_w] and not keys[pygame.K_s]:
 			self.vel.y = 0
 		if keys[pygame.K_SPACE]:
@@ -82,6 +82,8 @@ class Player:
 		
 	def move(self):
 		'''Applies velocity to position'''
+		# if self.vel.length() != 0:
+		# 	self.vel.normalize()
 		self.centerpos+=self.vel*self.delta
 	
 	def update(self,delta,screen):

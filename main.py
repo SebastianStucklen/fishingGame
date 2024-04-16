@@ -3,7 +3,7 @@ from pygame import Vector2
 from pygame.key import get_pressed
 from globals import FPS, SCREEN_SIZE, CursorTools, TextDisplay
 from player import Player
-from interactables import FishingHole, tutorial
+from interactables import FishingHole, tutorial, SellStation
 from fishgen import fishgen
 from fishgen import speciesGen
 from fishes import Fishes
@@ -26,32 +26,47 @@ lake = FishingHole()
 deltalist = []
 teste1 = Fishes()
 inv = TextDisplay(guy.inventory,5,5,32)
+market = SellStation()
 viewInv = False
 
+def doNothing():
+	return True
 
 tutorial(screen)
 
+teste3 = False
+
 while not doExit:
 	delta = clock.tick(FPS) / 1000
+	teste3 = False
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			doExit = True #lets you quit program
 		if event.type == pygame.KEYDOWN and get_pressed()[pygame.K_e]:
 			viewInv = not viewInv
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			teste3 = True
+
+		
 	screen.fill((70, 130, 10))
 	
 	whatfish = fishgen()
 	if ct.playerInteract(lake.rect,guy.centerpos, lambda: lake.quicktime(screen,delta,whatfish[1])):
-		print(whatfish)
 		guy.inventory.append(speciesGen(whatfish[0]))
 		for i in range(len(guy.inventory)-1):
 			guy.inventory[i].toggleBigView(False)
-		print(guy.inventory)
+			viewInv = False
 
 	lake.draw(screen)
+
 	guy.update(delta,screen)
 
+	market.draw(screen)
 	
+
+	ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 400, teste3)
+	market.drawButtons(screen)
+
 
 	teste2 = [1,1]
 	for i in range(len(guy.inventory)):

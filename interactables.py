@@ -124,3 +124,38 @@ def tutorial(screen):
 			running = False
 		pygame.display.flip()
 
+class SellStation:
+
+	def __init__(self):
+		self.rect = Rect(1200,0,340,340)
+		self.upgRect = Rect(300,300,300,170)
+		self.sellRect = Rect(1000,300,300,170)
+		self.image = pygame.image.load('resources/market.png')
+		self.upgImg = pygame.image.load('resources/upg.png')
+		self.sellImg = pygame.image.load("resources/sell.png")
+
+		self.selecting = False
+	
+	def draw(self,screen):
+		screen.blit(self.image,self.rect)
+	
+	def select(self,bewl):
+		self.selecting = bewl
+
+	def drawButtons(self,screen):
+		if self.selecting:
+			screen.blit(self.upgImg, self.upgRect)
+			screen.blit(self.sellImg, self.sellRect)
+
+	def upgButton(self):
+		self.selecting = False
+		return True
+	def sellButton(self):
+		self.selecting = False
+		return True
+	
+
+		
+
+
+	
