@@ -33,16 +33,21 @@ class CursorTools:
 		self.default = image
 		self.clickable = image2
 		self.canClick = False
+
+	def fakePass():
+		return True
+
 	def clickInteract(self,objPos:Rect):
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			return True
 
-	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400, teste3: bool = True):
+	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400, pressDown: bool = True):
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
-				if pygame.mouse.get_pressed()[0] and teste3:
-					click.play()
+				if pygame.mouse.get_pressed()[0] and pressDown:
+					if mixer.get_busy() == False:
+						click.play()
 					return function()
 			else:
 				self.canClick = False

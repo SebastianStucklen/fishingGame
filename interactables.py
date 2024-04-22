@@ -118,7 +118,7 @@ def tutorial(screen):
 			text = font.render(description[i],0,(255,255,255))
 			line+=100
 			screen.blit(text, (100,line))
-		draw.rect(screen,(255,255,255),imgRect)
+		# draw.rect(screen,(255,255,255),imgRect)
 		screen.blit(close, (1200,100))
 		if imgRect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			running = False

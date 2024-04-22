@@ -52,6 +52,7 @@ class Fishes:
         self.caughtImg = self.baseImg #transform.scale_by(self.baseImg,self.size)
         self.inventoryImg = transform.smoothscale_by(self.baseImg,0.3)
         self.close = Rect(0,0,0,0)
+        self.invImgRect = Rect(0,0,0,0)
         self.bigView = True
         self.smallView = True
 
@@ -64,6 +65,7 @@ class Fishes:
         ]
     def caughtDisplay(self,screen:pygame.Surface):
         if self.bigView == True:
+            screen.fill((0,0,0))
             screen.blit(bg,(0,0))
 
             font = pygame.font.Font(None, 60)
@@ -100,6 +102,8 @@ class Fishes:
             textrect.centerx = imgRect.centerx
             textrect.centery = pos[1] + (imgRect.height+10)
             screen.blit(text, textrect)
+
+            self.invImgRect = imgRect
 
     def toggleBigView(self,bewl: bool):
         self.bigView = bewl

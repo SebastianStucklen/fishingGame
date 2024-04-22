@@ -14,14 +14,22 @@ class Player:
 		self.screen: pygame.Surface
 		###load image
 		self.baseImage = pygame.image.load('resources/guyNice.png')
+		self.baseImageRight = pygame.image.load('resources/guyNiceRight.png')
 		self.baseBlaster = pygame.image.load('resources/bigfist.png')
 		###give images correct sizes (96 pixels and 75 pixels respectively)
-		self.defaultSizeImage = pygame.transform.smoothscale_by(self.baseImage,96/self.baseImage.get_rect().height)
-		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 75/self.baseBlaster.get_rect().width)
-		###scales images to resolution
-		self.image = pygame.transform.smoothscale_by(self.defaultSizeImage,scale)
-		self.BlasterImage = pygame.transform.smoothscale_by(self.defaultSizeBlaster,scale)
+		#/1200
+		self.defaultSizeImage = pygame.transform.smoothscale_by(self.baseImage,96/1100)#self.baseImage.get_rect().height)
+		self.defaultSizeImageRight = pygame.transform.smoothscale_by(self.baseImageRight,96/1100)#self.baseImage.get_rect().height)
+		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 95/self.baseBlaster.get_rect().width)
 
+		
+		###scales images to resolution
+		# self.image = pygame.transform.smoothscale_by(self.defaultSizeImage,scale)
+		# self.BlasterImage = pygame.transform.smoothscale_by(self.defaultSizeBlaster,scale)
+		self.BlasterImage = self.defaultSizeBlaster
+		self.image = self.defaultSizeImage
+
+		
 		#self.transformed_image = pygame.transform.rotate(self.image, 0)
 		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, 0)
 		
@@ -66,8 +74,10 @@ class Player:
 		###LEFT AND RIGHT
 		if keys[pygame.K_a]:
 			self.vel.x = -220
+			self.image = self.defaultSizeImage
 		if keys[pygame.K_d]:
 			self.vel.x = 220
+			self.image = self.defaultSizeImageRight
 		if not keys[pygame.K_a] and not keys[pygame.K_d]:
 			self.vel.x = 0
 		###UP AND DOWN
