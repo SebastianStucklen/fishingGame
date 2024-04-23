@@ -107,9 +107,11 @@ class Fishes:
 
     def toggleBigView(self,bewl: bool):
         self.bigView = bewl
+        return True
     
     def toggleSmallView(self,bewl: bool):
         self.smallView = bewl
+        return True
 
 class Common1(Fishes):
     baseImg = common1

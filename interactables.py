@@ -71,8 +71,6 @@ class FishingHole:
 					break
 
 			player.append(IPUT)
-		print(player)
-		print(fish)
 		if player == fish:
 			finish.play()
 			return True
@@ -127,9 +125,10 @@ def tutorial(screen):
 class SellStation:
 
 	def __init__(self):
-		self.rect = Rect(1200,0,340,340)
-		self.upgRect = Rect(300,300,300,170)
-		self.sellRect = Rect(1000,300,300,170)
+		self.rect = Rect(1150,50,340,340)
+		self.upgRect = Rect(300,350,300,170)
+		self.sellRect = Rect(1000,350,300,170)
+		self.sharedRect = Rect(650,50,300,170)
 		self.image = pygame.image.load('resources/market.png')
 		self.upgImg = pygame.image.load('resources/upg.png')
 		self.sellImg = pygame.image.load("resources/sell.png")
@@ -141,11 +140,16 @@ class SellStation:
 	
 	def select(self,bewl):
 		self.selecting = bewl
+		return True
 
-	def drawButtons(self,screen):
+	def drawButtons(self,screen, whatpage:int = 0):
 		if self.selecting:
 			screen.blit(self.upgImg, self.upgRect)
 			screen.blit(self.sellImg, self.sellRect)
+		elif whatpage == 1:
+			screen.blit(self.upgImg,self.sharedRect)
+		elif whatpage == 2:
+			screen.blit(self.sellImg,self.sharedRect)
 
 	def upgButton(self):
 		self.selecting = False

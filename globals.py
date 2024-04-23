@@ -15,6 +15,8 @@ from pygame import mixer
 mixer.init()
 click = mixer.Sound("resources/click.wav")
 
+
+
 class TextDisplay:
 	def __init__(self, text, x: float, y: float,size):
 		if text == None: text = ""
@@ -34,8 +36,6 @@ class CursorTools:
 		self.clickable = image2
 		self.canClick = False
 
-	def fakePass():
-		return True
 
 	def clickInteract(self,objPos:Rect):
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:

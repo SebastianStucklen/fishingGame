@@ -2,7 +2,6 @@ import pygame
 from pygame.math import Vector2
 import math
 import random
-
 from math import atan2
 from pygame import Rect
 
@@ -42,6 +41,10 @@ class Player:
 		
 		self.inventory = []
 
+		self.chance = 0
+		self.money = 0
+		# self.controller: object
+
 	def mouseMove(self):
 		self.newMousePos = Vector2(pygame.mouse.get_pos())
 
@@ -55,12 +58,12 @@ class Player:
 		rect_to_draw = Rect(self.image.get_rect())
 		rect_to_draw.center = (int(self.centerpos.x), int(self.centerpos.y))
 
-		rect_to_blow = Rect(self.transformed_Blaster.get_rect())
-		rect_to_blow.center = (int(self.centerpos.x), int(self.centerpos.y))
+		rect_to_fish = Rect(self.transformed_Blaster.get_rect())
+		rect_to_fish.center = (int(self.centerpos.x), int(self.centerpos.y))
 
 		self.screen.blit(
 			self.transformed_Blaster,
-			rect_to_blow
+			rect_to_fish
 		)
 		self.screen.blit(
 			self.image,
@@ -89,12 +92,19 @@ class Player:
 			self.vel.y = 0
 		if keys[pygame.K_SPACE]:
 			pass
+
+		# if pygame.joystick.get_count() > 0:
+		# 	if self.controller != pygame.joystick.Joystick(0):
+		# 		self.controller = pygame.joystick.Joystick(0)
+			
 		
 	def move(self):
 		'''Applies velocity to position'''
 		# if self.vel.length() != 0:
 		# 	self.vel.normalize()
 		self.centerpos+=self.vel*self.delta
+
+	
 	
 	def update(self,delta,screen):
 		'''Runs specific player functions every frame'''
@@ -106,3 +116,7 @@ class Player:
 		self.mouseMove()
 		self.rotate()
 		self.draw()
+
+	def upgrade(self):
+		self.chance += 1
+		return True
