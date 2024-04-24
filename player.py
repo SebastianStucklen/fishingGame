@@ -12,9 +12,9 @@ class Player:
 		self.delta:float
 		self.screen: pygame.Surface
 		###load image
-		self.baseImage = pygame.image.load('resources/guyNice.png')
-		self.baseImageRight = pygame.image.load('resources/guyNiceRight.png')
-		self.baseBlaster = pygame.image.load('resources/bigfist.png')
+		self.baseImage = pygame.image.load('resources/guyNice.png').convert_alpha()
+		self.baseImageRight = pygame.image.load('resources/guyNiceRight.png').convert_alpha()
+		self.baseBlaster = pygame.image.load('resources/bigfist.png').convert_alpha()
 		###give images correct sizes (96 pixels and 75 pixels respectively)
 		#/1200
 		self.defaultSizeImage = pygame.transform.smoothscale_by(self.baseImage,96/1100)#self.baseImage.get_rect().height)

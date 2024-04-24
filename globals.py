@@ -12,8 +12,7 @@ WHITE = (255,255,255)
 GREEN = (20,235,0)
 
 from pygame import mixer
-mixer.init()
-click = mixer.Sound("resources/click.wav")
+
 
 
 
@@ -30,8 +29,7 @@ class TextDisplay:
 		screen.blit(text, (self.x, self.y))
 
 class CursorTools:
-	def __init__(self,screen:pygame.Surface, image:pygame.Surface, image2:pygame.Surface):
-		self.screen = screen
+	def __init__(self, image:pygame.Surface, image2:pygame.Surface):
 		self.default = image
 		self.clickable = image2
 		self.canClick = False
@@ -46,18 +44,7 @@ class CursorTools:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True
 				if pygame.mouse.get_pressed()[0] and pressDown:
-					if mixer.get_busy() == False:
-						click.play()
 					return function()
-			else:
-				self.canClick = False
-
-	def customCursor(self):
-		# if pygame.mouse.get_visible():
-		# 	pygame.mouse.set_visible(False)
+	def customCursor(self,screen):
 		if self.canClick:
-			# pygame.mouse.set_cursor((0, 0), self.clickable)
-			self.screen.blit(self.clickable, pygame.mouse.get_pos())
-		# else:
-			# pygame.mouse.set_cursor((0, 0), self.default)
-			# self.screen.blit(self.default, pygame.mouse.get_pos())
+			screen.blit(self.clickable, pygame.mouse.get_pos())

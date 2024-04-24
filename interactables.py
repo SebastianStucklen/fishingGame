@@ -12,6 +12,9 @@ mixer.init()
 correct = mixer.Sound("resources/correct.wav")
 finish = mixer.Sound("resources/success2.mp3")
 close = pygame.image.load('resources/close.png')
+tutorialBg = pygame.image.load('resources/tutorial.png')
+mixer.Sound.set_volume(finish,0.6)
+mixer.Sound.set_volume(correct,0.8)
 class FishingHole:
 	
 	def __init__(self):
@@ -21,10 +24,6 @@ class FishingHole:
 	def draw(self,screen):
 		draw.rect(screen, (0, 162, 232), self.rect)
 
-	def collide(self,coord: Vector2):
-		if self.rect.collidepoint(coord):
-			return True
-
 
 	def quicktime(self,screen,delta,length) -> bool:
 		letterData = []
@@ -33,7 +32,6 @@ class FishingHole:
 		timer = 0
 		screen.fill((0,0,0))
 		font = pygame.font.Font(None, 200)
-		mixer.stop()
 		for i in range(length):
 			prompt = random.choice(["Z","X","C","V"])
 			if i > 0:
@@ -94,6 +92,37 @@ class FishingHole:
 			return "void"
 	
 def tutorial(screen):
+	running = 0
+	description = [
+	    #4 lines maximum
+	    "WELCOME TO FISHFISHFISH",
+	    'heres a quick tutorial',
+	    "use ( W A S D ) to move, and use ( E ) to open your inventory",
+	    "use mouse to interact with objects when your cursor displays ( ! )",
+		"press on the lake to fish"
+	]
+
+	font = pygame.font.Font(None, 60)
+
+	imgRect = Rect(1200,100,70,70)
+	while running < 10**10:
+		running+=1
+		for event in pygame.event.get():
+			pass
+		line = 250-100
+		for i in range(len(description)):
+			text = font.render(description[i],0,(255,255,255))
+			line+=100
+			textRect = text.get_rect()
+			textRect.centerx = SCREEN_RECT.centerx
+			screen.blit(text, (textRect.x,line))
+		if running > 3000:
+			screen.blit(close, (1200,100))
+		if imgRect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+			running = 10**10
+		pygame.display.flip()
+
+def invTutorial(screen):
 	running = True
 	description = [
 	    #4 lines maximum
@@ -108,19 +137,24 @@ def tutorial(screen):
 
 	screen.blit(close, (1200,100))
 	imgRect = Rect(1200,100,70,70)
+	screen.blit(tutorialBg,(0,0))
 	while running:
+		
 		for event in pygame.event.get():
 			pass
 		line = 250-100
 		for i in range(len(description)):
 			text = font.render(description[i],0,(255,255,255))
 			line+=100
-			screen.blit(text, (100,line))
+			textRect = text.get_rect()
+			textRect.centerx = SCREEN_RECT.centerx
+			screen.blit(text, (textRect.x,line))
 		# draw.rect(screen,(255,255,255),imgRect)
 		screen.blit(close, (1200,100))
 		if imgRect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			running = False
 		pygame.display.flip()
+	return True
 
 class SellStation:
 
@@ -128,12 +162,14 @@ class SellStation:
 		self.rect = Rect(1150,50,340,340)
 		self.upgRect = Rect(300,350,300,170)
 		self.sellRect = Rect(1000,350,300,170)
-		self.sharedRect = Rect(650,50,300,170)
+		self.sharedRect = Rect(650,370,300,170)
 		self.image = pygame.image.load('resources/market.png')
 		self.upgImg = pygame.image.load('resources/upg.png')
 		self.sellImg = pygame.image.load("resources/sell.png")
 
 		self.selecting = False
+		self.isSelling = False
+		self.isUpgrading = False
 	
 	def draw(self,screen):
 		screen.blit(self.image,self.rect)
@@ -142,14 +178,23 @@ class SellStation:
 		self.selecting = bewl
 		return True
 
-	def drawButtons(self,screen, whatpage:int = 0):
+	def drawButtons(self,screen):
 		if self.selecting:
 			screen.blit(self.upgImg, self.upgRect)
 			screen.blit(self.sellImg, self.sellRect)
-		elif whatpage == 1:
+		elif self.isUpgrading:
 			screen.blit(self.upgImg,self.sharedRect)
-		elif whatpage == 2:
+		elif self.isSelling:
 			screen.blit(self.sellImg,self.sharedRect)
+
+	def upgrading(self,bewl: bool):
+		self.isUpgrading = bewl
+		return True
+
+	def selling(self, bewl: bool):
+		self.isSelling = bewl
+		return True
+	
 
 	def upgButton(self):
 		self.selecting = False
