@@ -96,10 +96,10 @@ def tutorial(screen):
 	description = [
 	    #4 lines maximum
 	    "WELCOME TO FISHFISHFISH",
-	    'heres a quick tutorial',
 	    "use ( W A S D ) to move, and use ( E ) to open your inventory",
 	    "use mouse to interact with objects when your cursor displays ( ! )",
-		"press on the lake to fish"
+	    "click on the lake to begin your fishing journey",
+	    "happy fishing!",
 	]
 
 	font = pygame.font.Font(None, 60)
@@ -126,11 +126,11 @@ def invTutorial(screen):
 	running = True
 	description = [
 	    #4 lines maximum
-	    "WELCOME TO FISHFISHFISH",
-	    'heres a quick tutorial',
-	    "use ( W A S D ) to move, and use ( E ) to open your inventory",
-	    "use mouse to interact with objects when your cursor displays ( ! )",
-		"press on the lake to fish"
+	    "this is your inventory",
+	    'you can see all of your fish here',
+	    "you can see each fishes price and size",
+	    "click on a fish to see more info on them",
+		"happy fishing!"
 	]
 
 	font = pygame.font.Font(None, 60)
