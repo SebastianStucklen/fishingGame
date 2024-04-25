@@ -11,7 +11,6 @@ FPS = 60
 WHITE = (255,255,255)
 GREEN = (20,235,0)
 
-from pygame import mixer
 
 
 
@@ -39,7 +38,7 @@ class CursorTools:
 		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
 			return True
 
-	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 400, pressDown: bool = True):
+	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 200, pressDown: bool = True):
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
 			if objPos.collidepoint(pygame.mouse.get_pos()):
 				self.canClick = True

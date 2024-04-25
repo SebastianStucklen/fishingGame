@@ -7,7 +7,7 @@ from pygame import Rect
 from pygame import draw
 from globals import SCREEN_RECT, WHITE, GREEN
 from pygame import mixer
-mixer.init()
+# mixer	.init()
 
 correct = mixer.Sound("resources/correct.wav")
 finish = mixer.Sound("resources/success2.mp3")
@@ -19,7 +19,6 @@ class FishingHole:
 	
 	def __init__(self):
 		self.rect = Rect(50,400,700,400)
-		self.text = []
 	
 	def draw(self,screen):
 		draw.rect(screen, (0, 162, 232), self.rect)
@@ -38,14 +37,14 @@ class FishingHole:
 				while prompt == letterData[i-1][-1]:
 					prompt = random.choice(["Z","X","C","V"])
 			fish.append(prompt)
-			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.width - 100) // length)), SCREEN_RECT.centery, prompt])
-			# print(SCREEN_RECT.x + i * ((SCREEN_RECT.width - 100) / length))
-			# print(letterData[i][1])
+			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
+
 			screen.blit(letterData[i][0],(letterData[i][1],letterData[i][2]))
+			
 		for j in range(length):
 			IPUT = 'void'
 			while True:
-				maxtime = length*2
+				maxtime = length
 				for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						doExit = True
@@ -54,8 +53,8 @@ class FishingHole:
 
 				timer += delta/10
 
-				draw.rect(screen, (255,0,0), ((0 + SCREEN_RECT.width / 4), (SCREEN_RECT.centery - 100), (SCREEN_RECT.width / 2), 50))
-				draw.rect(screen, (255,255,255), ((0 + SCREEN_RECT.width / 4 +timer * ((SCREEN_RECT.width / 2)/maxtime)), (SCREEN_RECT.centery - 100), (SCREEN_RECT.width / 2 - timer * ((SCREEN_RECT.width / 2)/maxtime)), 50))
+				draw.rect(screen, (255,0,0), ((0 + SCREEN_RECT.w / 4), (SCREEN_RECT.centery - 100), (SCREEN_RECT.w / 2), 50))
+				draw.rect(screen, (255,255,255), ((0 + SCREEN_RECT.w / 4 +timer * ((SCREEN_RECT.w / 2)/maxtime)), (SCREEN_RECT.centery - 100), (SCREEN_RECT.w / 2 - timer * ((SCREEN_RECT.w / 2)/maxtime)), 50))
 
 				pygame.display.flip()
 
@@ -69,12 +68,12 @@ class FishingHole:
 					break
 
 			player.append(IPUT)
+			
 		if player == fish:
-			finish.play()
+			mixer.stop()
 			return True
 			
 		else:
-			# print(fish, player)
 			return False
 				
 		
