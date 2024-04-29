@@ -1,9 +1,8 @@
 import pygame
 from pygame.math import Vector2
 import math
-import random
-from math import atan2
 from pygame import Rect
+from particles import ParticleEmitter
 
 
 class Player:
@@ -20,30 +19,43 @@ class Player:
 		self.defaultSizeImage = pygame.transform.smoothscale_by(self.baseImage,96/1100)#self.baseImage.get_rect().height)
 		self.defaultSizeImageRight = pygame.transform.smoothscale_by(self.baseImageRight,96/1100)#self.baseImage.get_rect().height)
 		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 95/self.baseBlaster.get_rect().width)
-
-		
 		###scales images to resolution
 		# self.image = pygame.transform.smoothscale_by(self.defaultSizeImage,scale)
 		# self.BlasterImage = pygame.transform.smoothscale_by(self.defaultSizeBlaster,scale)
 		self.BlasterImage = self.defaultSizeBlaster
 		self.image = self.defaultSizeImage
-
-		
 		#self.transformed_image = pygame.transform.rotate(self.image, 0)
 		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, 0)
 		
 		self.vel = Vector2(0,0)
+		self.direction = 1
 		self.centerpos = Vector2(400,400)
-
+		self.feetpos = Vector2(self.centerpos.x, self.centerpos.y + 122.181818182) #122.181818182  height of guy
 		self.newMousePos = Vector2(0,0)
-
 		self.handAngle: float
 		
 		self.inventory = []
-
 		self.chance = 0
 		self.money = 0
-		# self.controller: object
+
+		self.dirt = ParticleEmitter(
+			particleLifetime = 0.45,
+			initAttributes = [
+				["randYVelo", [-1800,0]],
+				["randColorChoice", [(56, 35, 23), (81,237,37),(185,122,87)]],
+				["randSize", [8,16]]
+			],
+			updateAttributes = [
+				["sizeOverLife", [10, 8, 1]],
+				["deleteOnSize", [0, 1]],
+			],
+			ppf = 1,
+			maxParticles = 50,
+			spawnType = "onMove",
+			ppfMaxVelo = 0.001,
+
+		)
+		
 
 	def mouseMove(self):
 		self.newMousePos = Vector2(pygame.mouse.get_pos())
@@ -78,9 +90,11 @@ class Player:
 		if keys[pygame.K_a]:
 			self.vel.x = -220
 			self.image = self.defaultSizeImage
+			self.direction = 0
 		if keys[pygame.K_d]:
 			self.vel.x = 220
 			self.image = self.defaultSizeImageRight
+			self.direction = 1
 		if not keys[pygame.K_a] and not keys[pygame.K_d]:
 			self.vel.x = 0
 		###UP AND DOWN
@@ -92,17 +106,15 @@ class Player:
 			self.vel.y = 0
 		if keys[pygame.K_SPACE]:
 			pass
-
-		# if pygame.joystick.get_count() > 0:
-		# 	if self.controller != pygame.joystick.Joystick(0):
-		# 		self.controller = pygame.joystick.Joystick(0)
-			
 		
 	def move(self):
 		'''Applies velocity to position'''
-		# if self.vel.length() != 0:
-		# 	self.vel.normalize()
+
 		self.centerpos+=self.vel*self.delta
+		if self.direction == 1:
+			self.feetpos.update(self.centerpos.x-35, self.centerpos.y+35)
+		else:
+			self.feetpos.update(self.centerpos.x+35, self.centerpos.y+35)
 
 	
 	
@@ -115,6 +127,7 @@ class Player:
 		self.move()
 		self.mouseMove()
 		self.rotate()
+		self.dirt.update(screen, delta, self.feetpos,self.vel)
 		self.draw()
 
 	def upgrade(self):

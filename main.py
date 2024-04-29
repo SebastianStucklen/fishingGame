@@ -49,8 +49,25 @@ Music.music.load('resources/thejazzpiano.mp3')
 Music.music.play(-1)
 Music.music.set_volume(0.7)
 
+gameTime = 0
+deltaList = []
+teste6 = 0
 while not doExit:
 	delta = clock.tick(FPS) / 1000
+	deltaList.append(delta)
+	gameTime += delta
+	if round(gameTime,3) % 0.5 < delta:
+		teste6+=1
+		deltaList.sort()
+		print(
+			teste6,
+			" --- ",
+			"GAMETIME: ", round(gameTime,1), " --- ",
+			"MIN: ", deltaList[0], " --- ",
+			"MED: ", deltaList[(len(deltaList)//2)-1], " --- ",
+			"MAX: ", deltaList[len(deltaList)-1]
+		)
+		deltaList.clear()
 	pressDown = False
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
