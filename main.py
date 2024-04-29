@@ -23,7 +23,7 @@ defaultImg = pygame.image.load("default.png")
 interactImg = pygame.image.load("interact.png")
 bgImage = pygame.image.load("resources/grass3.png").convert()
 
-font = pygame.font.Font(None, 60)
+font = pygame.font.Font(None, 52)
 
 ct = CursorTools(defaultImg,interactImg)
 guy = Player(1)
@@ -88,27 +88,27 @@ while not doExit:
 
 		lake.draw(screen)
 
-		
 
 		market.draw(screen)
+		
+		if lake.rect.colliderect(guy.rect):
+			guy.reverseVel()
 
 		guy.update(delta,screen)
 
-		text = font.render(f"fishbux: {str(round(guy.money))}",1,(20,30,0))
-		screen.blit(text,(10,10))
 
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 200, pressDown):
 			gamestate = "market"
-
+	
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
 		Music.music.pause()
 		if Music.get_busy() == False:
 			Music.Sound.play(shop, -1)
 		market.drawButtons(screen)
-		if ct.playerInteract(market.upgRect, guy.centerpos, market.upgButton, SCREEN_RECT.w):
+		if ct.playerInteract(market.upgRect, guy.centerpos, market.upgButton, SCREEN_RECT.w, pressDown):
 			gamestate = "upgrading"
-		if ct.playerInteract(market.sellRect, guy.centerpos, market.sellButton, SCREEN_RECT.w):
+		if ct.playerInteract(market.sellRect, guy.centerpos, market.sellButton, SCREEN_RECT.w, pressDown):
 			gamestate = "selling"
 
 	elif gamestate == "upgrading":
@@ -118,8 +118,8 @@ while not doExit:
 		textrect = text.get_rect()
 		textrect.topleft = (650,450)
 		screen.blit(text,(650,450))
-		print(unpress)
-		ct.playerInteract(textrect, guy.centerpos, guy.upgrade, SCREEN_RECT.w, pressDown)
+		if ct.playerInteract(textrect, guy.centerpos, lambda: guy.upgradeChance(100), SCREEN_RECT.w, pressDown) == False:
+			pass
 		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
 			gamestate = "main"
 
@@ -136,10 +136,10 @@ while not doExit:
 				teste2[0] = 1
 				teste2[1] += 120
 			market.drawButtons(screen)
-			if ct.playerInteract(guy.inventory[i].invImgRect, guy.centerpos, doNothing,SCREEN_RECT.w):
+			if ct.playerInteract(guy.inventory[i].invImgRect, guy.centerpos, doNothing,SCREEN_RECT.w, pressDown):
 				market.selling(True)
 				sellwhat = i
-			if market.isSelling and ct.playerInteract(market.sharedRect, guy.centerpos, doNothing, SCREEN_RECT.w):
+			if market.isSelling and ct.playerInteract(market.sharedRect, guy.centerpos, doNothing, SCREEN_RECT.w, pressDown):
 				guy.money+=guy.inventory[sellwhat].price
 				guy.inventory.pop(sellwhat)
 				market.selling(False)
@@ -149,10 +149,12 @@ while not doExit:
 
 		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
 			gamestate = "main"
+	
 	else:
 		Music.Sound.stop(shop)
 		Music.music.unpause()
-		
+	
+	
 	#-------------------------------------- LAKE ----------------------------------------
 	if gamestate == "lake":
 		whatfish = fishgen(guy.chance)
@@ -205,7 +207,7 @@ while not doExit:
 		if tutorials[0] == False:
 			tutorials[0] = invTutorial(screen)
 
-
+	guy.statDisplay()
 	ct.customCursor(screen)
 	ct.canClick = False
 	pygame.display.flip()

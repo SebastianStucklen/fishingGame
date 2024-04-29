@@ -20,24 +20,27 @@ class Player:
 		self.defaultSizeImageRight = pygame.transform.smoothscale_by(self.baseImageRight,96/1100)#self.baseImage.get_rect().height)
 		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 95/self.baseBlaster.get_rect().width)
 		###scales images to resolution
-		# self.image = pygame.transform.smoothscale_by(self.defaultSizeImage,scale)
-		# self.BlasterImage = pygame.transform.smoothscale_by(self.defaultSizeBlaster,scale)
 		self.BlasterImage = self.defaultSizeBlaster
 		self.image = self.defaultSizeImage
-		#self.transformed_image = pygame.transform.rotate(self.image, 0)
 		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, 0)
-		
+		#player states
 		self.vel = Vector2(0,0)
 		self.direction = 1
-		self.centerpos = Vector2(400,400)
-		self.feetpos = Vector2(self.centerpos.x, self.centerpos.y + 122.181818182) #122.181818182  height of guy
+		self.centerpos = Vector2(200,200)
+		self.rect = Rect(int(self.centerpos.x-50), int(self.centerpos.y-50), 100, 100)
+		self.feetpos = Vector2(0,0) #122.181818182  height of guy
+		#fishing rod
 		self.newMousePos = Vector2(0,0)
 		self.handAngle: float
-		
+		#stats
 		self.inventory = []
-		self.chance = 0
 		self.money = 0
+		#upgrade variables
+		self.chance = 0 # add 3
+		self.bagsize = 3 # add 3
+		self.maxspeed = 240 #add 60
 
+		#Particle System by Twice_
 		self.dirt = ParticleEmitter(
 			particleLifetime = 0.45,
 			initAttributes = [
@@ -56,6 +59,7 @@ class Player:
 
 		)
 		
+		self.font = pygame.font.Font(None, 52)
 
 	def mouseMove(self):
 		self.newMousePos = Vector2(pygame.mouse.get_pos())
@@ -88,35 +92,43 @@ class Player:
 		keys = pygame.key.get_pressed()
 		###LEFT AND RIGHT
 		if keys[pygame.K_a]:
-			self.vel.x = -220
+			if self.vel.x > -self.maxspeed:
+				self.vel.x -= 15
 			self.image = self.defaultSizeImage
-			self.direction = 0
+			self.direction = -1
+
 		if keys[pygame.K_d]:
-			self.vel.x = 220
+			if self.vel.x < self.maxspeed:
+				self.vel.x += 15
+
 			self.image = self.defaultSizeImageRight
 			self.direction = 1
+
 		if not keys[pygame.K_a] and not keys[pygame.K_d]:
-			self.vel.x = 0
+			self.vel.x *= 0.9
 		###UP AND DOWN
 		if keys[pygame.K_w]:
-			self.vel.y = -220
+			if self.vel.y > -self.maxspeed:
+				self.vel.y -= 15
+
 		if keys[pygame.K_s]:
-			self.vel.y = 220
+			if self.vel.y < self.maxspeed:
+				self.vel.y += 15
+
 		if not keys[pygame.K_w] and not keys[pygame.K_s]:
-			self.vel.y = 0
-		if keys[pygame.K_SPACE]:
-			pass
+			self.vel.y *= 0.9
 		
 	def move(self):
 		'''Applies velocity to position'''
-
 		self.centerpos+=self.vel*self.delta
 		if self.direction == 1:
 			self.feetpos.update(self.centerpos.x-35, self.centerpos.y+35)
 		else:
 			self.feetpos.update(self.centerpos.x+35, self.centerpos.y+35)
 
-	
+	def reverseVel(self):
+		self.vel = -self.vel*1.2
+		self.direction = -self.direction
 	
 	def update(self,delta,screen):
 		'''Runs specific player functions every frame'''
@@ -127,9 +139,40 @@ class Player:
 		self.move()
 		self.mouseMove()
 		self.rotate()
+
+		self.rect = Rect(int(self.centerpos.x-50), int(self.centerpos.y-50), 100, 100)
 		self.dirt.update(screen, delta, self.feetpos,self.vel)
+
 		self.draw()
 
-	def upgrade(self):
-		self.chance += 1
-		return True
+	def statDisplay(self, gamestate = "main"):
+		wallet	= self.font.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
+		fish	= self.font.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
+		luck	= self.font.render(f"Luck:    {str(self.chance)}", 1, (20, 30, 0))
+		self.screen.blit(wallet, (15,775))
+		self.screen.blit(fish,	 (15,815))
+		self.screen.blit(luck,	 (15,855))
+
+	def upgradeChance(self, cost):
+		if self.money >= cost:
+			self.money -= cost
+			self.chance+=4
+			return True
+		else:
+			return False
+	
+	def upgradeBag(self, cost):
+		if self.money >= cost:
+			self.money -= cost
+			self.bagsize+=3
+			return True
+		else:
+			return False
+	
+	def upgradeSpeed(self, cost):
+		if self.money >= cost:
+			self.money -= cost
+			self.maxspeed+=60
+			return True
+		else:
+			return False

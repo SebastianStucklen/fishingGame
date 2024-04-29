@@ -125,7 +125,7 @@ class Common1(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a COMMON fish",
 			"it's a nice shade of lavender",
 		]
@@ -140,7 +140,7 @@ class Common2(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a COMMON fish",
 			"it's an odd shade of green",
 		]
@@ -155,7 +155,7 @@ class Common3(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a COMMON fish",
 			"it's a bright silver color",
 		]
@@ -170,7 +170,7 @@ class Common4(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a COMMON fish",
 			"it's a bright yellow color",
 		]
@@ -185,7 +185,7 @@ class Common5(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a COMMON fish",
 			"it's a pleasant orange color",
 		]
@@ -196,11 +196,11 @@ class Uncommon1(Fishes):
 	def __init__(self, size: float):
 		super().__init__(size)
 
-		self.price = 65*size
+		self.price = 64*size
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an UNCOMMON fish",
 			"it smiles at you, giving you",
 			"the feeling that all will be well",
@@ -212,11 +212,11 @@ class Uncommon2(Fishes):
 	def __init__(self, size: float):
 		super().__init__(size)
 
-		self.price = 65*size
+		self.price = 64*size
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an UNCOMMON fish",
 			"this isnt a fish!",
 			"it looks at you grumpily",
@@ -228,11 +228,11 @@ class Uncommon3(Fishes):
 	def __init__(self, size: float):
 		super().__init__(size)
 
-		self.price = 65*size
+		self.price = 64*size
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an UNCOMMON fish",
 			"the fish cuddles up next to you",
 			"you'd feel really guilty if you sold it",
@@ -248,7 +248,7 @@ class Rare1(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a RARE fish",
 			"its VERY ugly. perhaps the ugliest.",
 			"its trying to give you a kiss on the cheek",
@@ -264,7 +264,7 @@ class Rare2(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"these are RARE fishes",
 			"you caught a bag of 3 fish!",
 			"hat trick! nice job.",
@@ -280,7 +280,7 @@ class Epic1(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an EPIC fish",
 			"theres something deeply wrong with this fish",
 			"it wants to look cute, but failing miserably",
@@ -296,7 +296,7 @@ class Epic2(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an EPIC fish",
 			"it looks like a cave fish that got lost",
 			"you can see right through it",
@@ -312,7 +312,7 @@ class Legendary1(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a LEGENDARY fish?",
 			"this isnt a fish!",
 			"that's a LOT of money though",
@@ -328,7 +328,7 @@ class Legendary2(Fishes):
 
 		self.description = [
 			#4 lines maximum
-			f"Size: {round(size,2)}  |  Price: {round(self.price)}",
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is a LEGENDARY fish",
 			"the poor salmon got stuck",
 			"its a rare breed, worth tons",

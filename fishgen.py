@@ -1,12 +1,13 @@
 import random
 from fishes import Fishes, Common1, Common2, Common3, Common4, Common5, Uncommon1, Uncommon2, Uncommon3, Rare1, Rare2, Epic1, Epic2, Legendary1, Legendary2
-# Common (60.00% Base Drop Rate)
-# Uncommon (26.00% Base Drop Rate)
-# Rare (10.00% Base Drop Rate)
-# Very Rare (3.00% Base Drop Rate)
-# Legendary (1.00% Base Drop Rate)
+# Common (60.00% Base Drop Rate)   roll < 100
+# Uncommon (26.00% Base Drop Rate) roll < 40
+# Rare (10.00% Base Drop Rate)	   roll < 14
+# Very Rare (3.00% Base Drop Rate) roll < 4
+# Legendary (1.00% Base Drop Rate) roll < 1
 
-#chance upgrade = 18
+#chance upgrade = 3 every time
+# each one -9
 
 fishId = ""
 
@@ -15,16 +16,16 @@ def fishgen(chance = 0) -> tuple[str, int]:
 	roll = random.random()
 	roll *= 100
 	#[Rarity, Game rounds, fish id, money]
-	if roll < 1+chance:
+	if roll < -8+chance:
 		return ("Legendary", 12)
 	
-	elif roll < 4+chance:
+	elif roll < -5+chance:
 		return ("Epic", 9)
 	
-	elif roll < 14+chance:
+	elif roll < 5+chance:
 		return ("Rare", 6)
 	
-	elif roll < 40+chance:
+	elif roll < 31+chance:
 		return ("Uncommon", 4)
 	
 	elif roll < 100:

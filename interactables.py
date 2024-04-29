@@ -18,7 +18,7 @@ mixer.Sound.set_volume(correct,0.8)
 class FishingHole:
 	
 	def __init__(self):
-		self.rect = Rect(50,400,700,400)
+		self.rect = Rect(90,470,580,360)
 	
 	def draw(self,screen):
 		draw.rect(screen, (0, 162, 232), self.rect)

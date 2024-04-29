@@ -1,0 +1,20 @@
+CHANCE UPGRADE
+    price should always be 3rd highest fish * 4
+
+    first purchase  = 120
+    second purchase = 256
+    third purchase  = 480
+    fourth purchase = 1480
+
+    add 4 every time
+
+SPEED
+    add 60 every time
+
+BAG
+    add 3 every time
+
+LAKE
+    make fish pop drops slower
+
+ADD HOUSE THAT REPLENISHES LAKE AT COST ON INVENTORY CLEARED
