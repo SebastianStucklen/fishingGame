@@ -116,6 +116,7 @@ while not doExit:
 			gamestate = "upgrading"
 		if ct.playerInteract(market.sellRect, guy.centerpos, market.sellButton, SCREEN_RECT.w, pressDown):
 			gamestate = "selling"
+		
 
 	elif gamestate == "upgrading":
 		screen.fill((70, 130, 10))
