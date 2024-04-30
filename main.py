@@ -8,7 +8,7 @@ from pygame.key import get_pressed
 from pygame import mixer as Music
 
 from player import Player
-from interactables import FishingHole, tutorial, SellStation, invTutorial
+from interactables import FishingHole, tutorial, SellStation, invTutorial, Home
 from fishgen import fishgen
 from fishgen import speciesGen
 from fishes import Fishes
@@ -30,6 +30,8 @@ guy = Player(1)
 lake = FishingHole()
 teste1 = Fishes()
 market = SellStation()
+marketpage = 0
+home = Home()
 newest = 0
 sellwhat = 0
 
@@ -37,7 +39,7 @@ def doNothing():
 	return True
 gamestate = "main"
 
-tutorial(screen)
+# tutorial(screen)
 tutorials = [False,False,False]
 
 pressDown = False
@@ -83,14 +85,15 @@ while not doExit:
 
 	#-------------------------------------- MAIN ----------------------------------------
 	if gamestate == "main":
-		if ct.playerInteract(lake.rect,guy.centerpos, lambda: doNothing(), 200, pressDown):
+		if ct.playerInteract(lake.rect,guy.centerpos, lambda: doNothing(), 200, pressDown) and len(guy.inventory) < guy.bagsize:
 			gamestate = "lake"
 
 		lake.draw(screen)
 
 
 		market.draw(screen)
-		
+		home.draw(screen)
+
 		if lake.rect.colliderect(guy.rect):
 			guy.reverseVel()
 
@@ -99,6 +102,9 @@ while not doExit:
 
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 200, pressDown):
 			gamestate = "market"
+		
+		if len(guy.inventory) >= guy.bagsize and lake.rect.collidepoint(pygame.mouse.get_pos()):
+			screen.blit(close, pygame.mouse.get_pos())
 	
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
@@ -113,15 +119,14 @@ while not doExit:
 
 	elif gamestate == "upgrading":
 		screen.fill((70, 130, 10))
-		screen.blit(close, (20,20))
-		text = font.render(str(guy.chance),1,(20,30,0))
-		textrect = text.get_rect()
-		textrect.topleft = (650,450)
-		screen.blit(text,(650,450))
-		if ct.playerInteract(textrect, guy.centerpos, lambda: guy.upgradeChance(100), SCREEN_RECT.w, pressDown) == False:
-			pass
-		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
-			gamestate = "main"
+		if marketpage == 0:
+			market.chancePage(screen)
+			if ct.playerInteract(market.buyRect, guy.centerpos, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought]), SCREEN_RECT.w, pressDown):
+				market.chanceBought+=1
+
+		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(market.close, guy.centerpos, doNothing, SCREEN_RECT.w):
+			market.select(True)
+			gamestate = "market"
 
 	elif gamestate == "selling":
 		screen.fill((70, 130, 10))
@@ -148,7 +153,8 @@ while not doExit:
 			i+=1
 
 		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
-			gamestate = "main"
+			market.select(True)
+			gamestate = "market"
 	
 	else:
 		Music.Sound.stop(shop)

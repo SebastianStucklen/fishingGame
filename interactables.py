@@ -166,9 +166,28 @@ class SellStation:
 		self.upgImg = pygame.image.load('resources/upg.png')
 		self.sellImg = pygame.image.load("resources/sell.png")
 
+		self.nextImg = pygame.image.load("resources/next.png")
+		self.nextRect = Rect(1450,50,100,100)
+		self.buyImg = pygame.image.load("resources/buy.png")
+		self.buyRect = Rect(270,650,240,135)
+
+		self.chanceImg = pygame.image.load("resources/luck.png")
+		self.chanceRect = Rect(150,40,360,450)
+		self.chanceDesc = [
+			#4 lines maximum
+			"upgrade your luck",
+			"catch rarer fish more frequently",
+			# "placeholder line, dont blit, place cost here",
+			# "placeholder line, dont blit, place upgrade purchase count here",
+		]
+		self.chanceBought = 0
+		self.chancePrice = [120, 256, 480, 1480]
+
 		self.selecting = False
 		self.isSelling = False
 		self.isUpgrading = False
+
+		
 	
 	def draw(self,screen):
 		screen.blit(self.image,self.rect)
@@ -198,9 +217,58 @@ class SellStation:
 	def upgButton(self):
 		self.selecting = False
 		return True
+	
 	def sellButton(self):
 		self.selecting = False
 		return True
+	
+	def chancePage(self,screen: pygame.Surface):
+		self.close = Rect(15, 15, 75,75)
+		screen.blit(self.chanceImg, self.chanceRect)
+		screen.blit(self.nextImg,self.nextRect)
+		screen.blit(self.buyImg,self.buyRect)
+
+		font = pygame.font.Font(None, 60)
+		line = 250-100
+
+		text = font.render(self.chanceDesc[0],1,(20,30,0))
+			
+
+		for i in range(len(self.chanceDesc)):
+			text = font.render(self.chanceDesc[i],1,(20,30,0))
+			line+=64
+			textRect = text.get_rect()
+			textRect.centerx = 1000
+			screen.blit(text, (textRect.x,line))
+		
+		text = font.render(f"Cost: {self.chancePrice[self.chanceBought]}",1,(20,30,0))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
+
+		text = font.render(f"# purchased: {self.chanceBought}",1,(20,30,0))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
+			
+		screen.blit(close, (15, 15))
+
+		
+
+
+
+	
+class Home:
+	def __init__(self):
+		self.image = pygame.image.load("resources/home.png").convert_alpha()
+		self.rect = Rect(-60,-60,self.image.get_rect().w,self.image.get_rect().h)
+
+	def draw(self, screen: pygame.Surface):
+		screen.blit(self.image,self.rect)
+	
+
 	
 
 		

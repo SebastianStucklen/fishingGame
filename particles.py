@@ -4,6 +4,24 @@ import random
 from pygame import Vector2, Rect
 from globals import SCREEN_SIZE, SCREEN_RECT
 
+
+
+
+
+# CREDIT FOR PARTICLE SYSTEM GOES TO TWICE
+# @ https://github.com/Twice-Ice
+
+
+
+
+
+
+
+
+
+
+
+
 def randfloat(min, max):
 	#gets the correct scaling to handle with random values. This allows for ranges of .0005 to .01 for example.
 	scale = 10

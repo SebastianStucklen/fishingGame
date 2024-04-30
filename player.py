@@ -26,7 +26,7 @@ class Player:
 		#player states
 		self.vel = Vector2(0,0)
 		self.direction = 1
-		self.centerpos = Vector2(200,200)
+		self.centerpos = Vector2(500,400)
 		self.rect = Rect(int(self.centerpos.x-50), int(self.centerpos.y-50), 100, 100)
 		self.feetpos = Vector2(0,0) #122.181818182  height of guy
 		#fishing rod
