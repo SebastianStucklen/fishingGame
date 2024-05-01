@@ -171,8 +171,9 @@ class SellStation:
 		self.buyImg = pygame.image.load("resources/buy.png")
 		self.buyRect = Rect(270,650,240,135)
 
+		self.posterRect = Rect(150,40,480,600)
+
 		self.chanceImg = pygame.image.load("resources/luck.png")
-		self.chanceRect = Rect(150,40,360,450)
 		self.chanceDesc = [
 			#4 lines maximum
 			"upgrade your luck",
@@ -181,7 +182,15 @@ class SellStation:
 			# "placeholder line, dont blit, place upgrade purchase count here",
 		]
 		self.chanceBought = 0
-		self.chancePrice = [120, 256, 480, 1480]
+		self.chancePrice = [240, 480, 960, 1920]
+
+		self.bagImg = pygame.image.load("resources/bag.png")
+		self.bagDesc = [
+			"upgrade your bag",
+			"carry more fish",
+		]
+		self.bagBought = 0
+		self.bagPrice = [150,380,840,1670]
 
 		self.selecting = False
 		self.isSelling = False
@@ -224,7 +233,7 @@ class SellStation:
 	
 	def chancePage(self,screen: pygame.Surface):
 		self.close = Rect(15, 15, 75,75)
-		screen.blit(self.chanceImg, self.chanceRect)
+		screen.blit(self.chanceImg, self.posterRect)
 		screen.blit(self.nextImg,self.nextRect)
 		screen.blit(self.buyImg,self.buyRect)
 
@@ -248,6 +257,39 @@ class SellStation:
 		screen.blit(text, (textRect.x,line))
 
 		text = font.render(f"# purchased: {self.chanceBought}",1,(20,30,0))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
+			
+		screen.blit(close, (15, 15))
+	
+	def bagPage(self,screen: pygame.Surface):
+		self.close = Rect(15, 15, 75,75)
+		screen.blit(self.bagImg, self.posterRect)
+		screen.blit(self.nextImg,self.nextRect)
+		screen.blit(self.buyImg,self.buyRect)
+
+		font = pygame.font.Font(None, 60)
+		line = 250-100
+
+		text = font.render(self.bagDesc[0],1,(20,30,0))
+			
+
+		for i in range(len(self.bagDesc)):
+			text = font.render(self.bagDesc[i],1,(20,30,0))
+			line+=64
+			textRect = text.get_rect()
+			textRect.centerx = 1000
+			screen.blit(text, (textRect.x,line))
+		
+		text = font.render(f"Cost: {self.bagPrice[self.bagBought]}",1,(20,30,0))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
+
+		text = font.render(f"# purchased: {self.bagBought}",1,(20,30,0))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000

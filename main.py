@@ -22,10 +22,11 @@ clock = pygame.time.Clock()
 defaultImg = pygame.image.load("default.png")
 interactImg = pygame.image.load("interact.png")
 bgImage = pygame.image.load("resources/grass3.png").convert()
+invImage = pygame.image.load("resources/sack.png")
 
 font = pygame.font.Font(None, 52)
 
-ct = CursorTools(defaultImg,interactImg)
+ct = CursorTools(interactImg)
 guy = Player(1)
 lake = FishingHole()
 teste1 = Fishes()
@@ -62,12 +63,13 @@ while not doExit:
 		teste6+=1
 		deltaList.sort()
 		print(
-			teste6,
-			" --- ",
+			# teste6,
+			# " --- ",
 			"GAMETIME: ", round(gameTime,1), " --- ",
 			"MIN: ", deltaList[0], " --- ",
 			"MED: ", deltaList[(len(deltaList)//2)-1], " --- ",
-			"MAX: ", deltaList[len(deltaList)-1]
+			"MAX: ", deltaList[len(deltaList)-1], " --- ",
+			"GAMESTATE: ", gamestate, " --- ",
 		)
 		deltaList.clear()
 	pressDown = False
@@ -85,8 +87,10 @@ while not doExit:
 
 	#-------------------------------------- MAIN ----------------------------------------
 	if gamestate == "main":
-		if ct.playerInteract(lake.rect,guy.centerpos, lambda: doNothing(), 200, pressDown) and len(guy.inventory) < guy.bagsize:
-			gamestate = "lake"
+		if guy.bait > 1 and len(guy.inventory) < guy.bagsize:
+			if ct.playerInteract(lake.rect,guy.centerpos, doNothing, 200, pressDown):
+				guy.bait-=1
+				gamestate = "lake"
 
 		lake.draw(screen)
 
@@ -99,36 +103,58 @@ while not doExit:
 
 		guy.update(delta,screen)
 
+		screen.blit(invImage,(750,800))
+		if ct.clickInteract(Rect(750,800,100,100)):
+			gamestate = "inventory"
 
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 200, pressDown):
 			gamestate = "market"
 		
-		if len(guy.inventory) >= guy.bagsize and lake.rect.collidepoint(pygame.mouse.get_pos()):
-			screen.blit(close, pygame.mouse.get_pos())
+		if len(guy.inventory) >= guy.bagsize:
+			if lake.rect.collidepoint(pygame.mouse.get_pos()):
+				screen.blit(close, pygame.mouse.get_pos())
 	
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
 		Music.music.pause()
+
 		if Music.get_busy() == False:
 			Music.Sound.play(shop, -1)
-		market.drawButtons(screen)
-		if ct.playerInteract(market.upgRect, guy.centerpos, market.upgButton, SCREEN_RECT.w, pressDown):
-			gamestate = "upgrading"
-		if ct.playerInteract(market.sellRect, guy.centerpos, market.sellButton, SCREEN_RECT.w, pressDown):
-			gamestate = "selling"
-		
 
+		market.drawButtons(screen)
+		
+		screen.blit(close, (20,20))
+
+		if ct.clickInteract(market.upgRect, True, market.upgButton):
+			gamestate = "upgrading"
+		if ct.clickInteract(market.sellRect, True, market.sellButton):
+			gamestate = "selling"
+		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65), pressDown):
+			gamestate = "main"
+		
+	#-------------------- upgrades -------------------
 	elif gamestate == "upgrading":
 		screen.fill((70, 130, 10))
+
+
 		if marketpage == 0:
 			market.chancePage(screen)
-			if ct.playerInteract(market.buyRect, guy.centerpos, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought]), SCREEN_RECT.w, pressDown):
+			if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought])):
 				market.chanceBought+=1
+			if ct.clickInteract(market.nextRect, pressDown):
+				marketpage = 1
+		elif marketpage == 1:
+			market.bagPage(screen)
+			if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeBag(market.bagPrice[market.bagBought])):
+				market.bagBought+=1
+			if ct.clickInteract(market.nextRect, pressDown):
+				marketpage = 0
 
-		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(market.close, guy.centerpos, doNothing, SCREEN_RECT.w):
+		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(market.close, pressDown):
 			market.select(True)
 			gamestate = "market"
 
+	#-------------------- selling -------------------
 	elif gamestate == "selling":
 		screen.fill((70, 130, 10))
 		teste2 = [100,1]
@@ -142,10 +168,10 @@ while not doExit:
 				teste2[0] = 1
 				teste2[1] += 120
 			market.drawButtons(screen)
-			if ct.playerInteract(guy.inventory[i].invImgRect, guy.centerpos, doNothing,SCREEN_RECT.w, pressDown):
+			if ct.clickInteract(guy.inventory[i].invImgRect, pressDown):
 				market.selling(True)
 				sellwhat = i
-			if market.isSelling and ct.playerInteract(market.sharedRect, guy.centerpos, doNothing, SCREEN_RECT.w, pressDown):
+			if market.isSelling and ct.clickInteract(market.sharedRect, pressDown):
 				guy.money+=guy.inventory[sellwhat].price
 				guy.inventory.pop(sellwhat)
 				market.selling(False)
@@ -153,15 +179,14 @@ while not doExit:
 				i=-1
 			i+=1
 
-		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
+		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
 			market.select(True)
 			gamestate = "market"
 	
 	else:
 		Music.Sound.stop(shop)
 		Music.music.unpause()
-	
-	
+		
 	#-------------------------------------- LAKE ----------------------------------------
 	if gamestate == "lake":
 		whatfish = fishgen(guy.chance)
@@ -177,17 +202,17 @@ while not doExit:
 		screen.fill((70, 130, 10))
 		if guy.inventory[newest].bigView == True:
 				guy.inventory[newest].caughtDisplay(screen)
-				ct.playerInteract(guy.inventory[newest].close, guy.centerpos, lambda: guy.inventory[newest].toggleBigView(False), SCREEN_RECT.w)
+				ct.clickInteract(guy.inventory[newest].close, True, lambda: guy.inventory[newest].toggleBigView(False))
 				if get_pressed()[pygame.K_ESCAPE]:
 					guy.inventory[newest].toggleBigView(False)
 		else:
 			gamestate = "main"
 	
-	if gamestate == "sub-inventory2":
+	if gamestate == "sub-inventory2":	
 		screen.fill((70, 130, 10))
 		if guy.inventory[newest].bigView == True:
 				guy.inventory[newest].caughtDisplay(screen)
-				ct.playerInteract(guy.inventory[newest].close, guy.centerpos, lambda: guy.inventory[newest].toggleBigView(False), SCREEN_RECT.w)
+				ct.clickInteract(guy.inventory[newest].close, True, lambda: guy.inventory[newest].toggleBigView(False))
 				if get_pressed()[pygame.K_ESCAPE]:
 					guy.inventory[newest].toggleBigView(False)
 					gamestate = "inventory"
@@ -206,15 +231,18 @@ while not doExit:
 				teste2[0] = 1
 				teste2[1] += 120
 			if tutorials[0] == True:
-				if ct.playerInteract(guy.inventory[i].invImgRect, guy.centerpos, lambda: guy.inventory[i].toggleBigView(True),SCREEN_RECT.w):
+				if ct.clickInteract(guy.inventory[i].invImgRect, True, lambda: guy.inventory[i].toggleBigView(True)):
 					newest = i
 					gamestate = "sub-inventory2"
-		if get_pressed()[pygame.K_ESCAPE] or ct.playerInteract(Rect(20,20,65,65), guy.centerpos, doNothing, SCREEN_RECT.w):
+		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
 			gamestate = "main"
 		if tutorials[0] == False:
 			tutorials[0] = invTutorial(screen)
-
-	guy.statDisplay()
+	
+	if gamestate == "statscreen":
+		pass
+	else:
+		guy.statDisplay()
 	ct.customCursor(screen)
 	ct.canClick = False
 	pygame.display.flip()

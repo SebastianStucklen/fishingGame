@@ -35,6 +35,7 @@ class Player:
 		#stats
 		self.inventory = []
 		self.money = 0
+		self.bait = 100
 		#upgrade variables
 		self.chance = 0 # add 3
 		self.bagsize = 3 # add 3
@@ -146,12 +147,13 @@ class Player:
 		self.draw()
 
 	def statDisplay(self, gamestate = "main"):
-		wallet	= self.font.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
-		fish	= self.font.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
-		luck	= self.font.render(f"Luck:    {str(self.chance)}", 1, (20, 30, 0))
-		self.screen.blit(wallet, (15,775))
-		self.screen.blit(fish,	 (15,815))
-		self.screen.blit(luck,	 (15,855))
+		if gamestate == "main":
+			wallet	= self.font.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
+			fish	= self.font.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
+			bait	= self.font.render(f"Bait:    {str(self.bait)}", 1, (20, 30, 0))
+			self.screen.blit(wallet, (15,775))
+			self.screen.blit(fish,	 (15,815))
+			self.screen.blit(bait,	 (15,855))
 
 	def upgradeChance(self, cost):
 		if self.money >= cost:

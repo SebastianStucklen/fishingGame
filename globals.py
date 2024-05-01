@@ -12,38 +12,42 @@ WHITE = (255,255,255)
 GREEN = (20,235,0)
 
 
-
-
-
-class TextDisplay:
-	def __init__(self, text, x: float, y: float,size):
-		if text == None: text = ""
-		self.text = text
-		self.x: float = x
-		self.y: float = y
-
-	def update(self, screen, text, size, color: tuple = (255,255,255)):
-		font = pygame.font.Font(None, size)
-		text = font.render(str(text), 1, color)
-		screen.blit(text, (self.x, self.y))
-
 class CursorTools:
-	def __init__(self, image:pygame.Surface, image2:pygame.Surface):
-		self.default = image
-		self.clickable = image2
+	'''Various tools for making clicking on things a little easier'''
+	def __init__(self, image:pygame.Surface):
+		self.clickable = image
 		self.canClick = False
 
 
-	def clickInteract(self,objPos:Rect):
-		if objPos.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-			return True
+	def clickInteract(self,
+				   objPos:Rect, 
+				   pressDown: bool = True, 
+				   function:Callable[[], Any] = lambda: True):
+		'''for use with buttons, etc. / use pressDown(bool) argument if you only want something to run on pygame.mouse.MOUSEBUTTONDOWN / can be given 1 function to run upon click (return value recommended)'''
+		if objPos.collidepoint(pygame.mouse.get_pos()):
+		#object-mouse collision check
+			self.canClick = True
+			#for use with custom cursor alert image
+			if pygame.mouse.get_pressed()[0] and pressDown:
+				return function()#runs and returns function on click
 
-	def playerInteract(self, objPos:Rect, playerPos: Vector2, function:Callable[[], Any], range: int = 200, pressDown: bool = True):
+	def playerInteract(self, 
+					objPos:Rect, 
+					playerPos: Vector2, 
+					function:Callable[[], Any], 
+					range: int = 200, 
+					pressDown: bool = True):
+		'''for player specific interaction, with range. can be passed a function to run on click, as well as a bool variable meant to be used with pygame.mouse.MOUSEBUTTONDOWN'''
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:
+		#player-mouse range check
 			if objPos.collidepoint(pygame.mouse.get_pos()):
+			#object-mouse collision check
 				self.canClick = True
+				#for use with custom mouse alert image
 				if pygame.mouse.get_pressed()[0] and pressDown:
-					return function()
-	def customCursor(self,screen):
+					return function() #run and return function on click
+				
+	def customCursor(self, screen: pygame.Surface):
+		'''run every loop to draw an alert on mouse whenever something is clickable'''
 		if self.canClick:
 			screen.blit(self.clickable, pygame.mouse.get_pos())
