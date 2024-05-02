@@ -29,6 +29,7 @@ class FishingHole:
 		player = []
 		fish = []
 		timer = 0
+		fail = False
 		screen.fill((0,0,0))
 		font = pygame.font.Font(None, 200)
 		for i in range(length):
@@ -44,7 +45,7 @@ class FishingHole:
 		for j in range(length):
 			IPUT = 'void'
 			while True:
-				maxtime = length
+				maxtime = length*1.8
 				for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						doExit = True
@@ -64,15 +65,18 @@ class FishingHole:
 					correct.play()
 					break
 				if timer >= maxtime:
-					print("FAIL")
+					fail = True
 					break
+			if fail:
+				break
 
 			player.append(IPUT)
-			
+		if fail:
+			return False	
 		if player == fish:
 			mixer.stop()
 			return True
-			
+		
 		else:
 			return False
 				
@@ -182,7 +186,8 @@ class SellStation:
 			# "placeholder line, dont blit, place upgrade purchase count here",
 		]
 		self.chanceBought = 0
-		self.chancePrice = [240, 480, 960, 1920]
+		# self.chancePrice = [240, 6480, 2160, 720]
+		self.chancePrice = [240, "SOLD OUT",1920, 960, 480]
 
 		self.bagImg = pygame.image.load("resources/bag.png")
 		self.bagDesc = [
@@ -190,7 +195,8 @@ class SellStation:
 			"carry more fish",
 		]
 		self.bagBought = 0
-		self.bagPrice = [150,380,840,1670]
+		# self.bagPrice = [150,4050,1350,450]
+		self.bagPrice = [180, "SOLD OUT",1440,720,360]
 
 		self.selecting = False
 		self.isSelling = False
@@ -256,7 +262,7 @@ class SellStation:
 		textRect.centerx = 1000
 		screen.blit(text, (textRect.x,line))
 
-		text = font.render(f"# purchased: {self.chanceBought}",1,(20,30,0))
+		text = font.render(f"# purchased: {abs(self.chanceBought)}",1,(20,30,0))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
@@ -289,7 +295,7 @@ class SellStation:
 		textRect.centerx = 1000
 		screen.blit(text, (textRect.x,line))
 
-		text = font.render(f"# purchased: {self.bagBought}",1,(20,30,0))
+		text = font.render(f"# purchased: {abs(self.bagBought)}",1,(20,30,0))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
@@ -305,7 +311,7 @@ class SellStation:
 class Home:
 	def __init__(self):
 		self.image = pygame.image.load("resources/home.png").convert_alpha()
-		self.rect = Rect(-60,-60,self.image.get_rect().w,self.image.get_rect().h)
+		self.rect = Rect(-120,-120,self.image.get_rect().w,self.image.get_rect().h)
 
 	def draw(self, screen: pygame.Surface):
 		screen.blit(self.image,self.rect)

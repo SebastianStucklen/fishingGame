@@ -21,7 +21,7 @@ clock = pygame.time.Clock()
 
 defaultImg = pygame.image.load("default.png")
 interactImg = pygame.image.load("interact.png")
-bgImage = pygame.image.load("resources/grass3.png").convert()
+bgImage = pygame.image.load("resources/grass5.png").convert()
 invImage = pygame.image.load("resources/sack.png")
 
 font = pygame.font.Font(None, 52)
@@ -40,7 +40,7 @@ def doNothing():
 	return True
 gamestate = "main"
 
-# tutorial(screen)
+tutorial(screen)
 tutorials = [False,False,False]
 
 pressDown = False
@@ -92,13 +92,13 @@ while not doExit:
 				guy.bait-=1
 				gamestate = "lake"
 
-		lake.draw(screen)
+		# lake.draw(screen)
 
 
 		market.draw(screen)
 		home.draw(screen)
 
-		if lake.rect.colliderect(guy.rect):
+		if lake.rect.colliderect(guy.rect) or home.rect.colliderect(guy.rect):
 			guy.reverseVel()
 
 		guy.update(delta,screen)
@@ -109,7 +109,6 @@ while not doExit:
 
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 200, pressDown):
 			gamestate = "market"
-		
 		if len(guy.inventory) >= guy.bagsize:
 			if lake.rect.collidepoint(pygame.mouse.get_pos()):
 				screen.blit(close, pygame.mouse.get_pos())
@@ -136,17 +135,19 @@ while not doExit:
 	elif gamestate == "upgrading":
 		screen.fill((70, 130, 10))
 
-
+ 
 		if marketpage == 0:
 			market.chancePage(screen)
-			if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought])):
-				market.chanceBought+=1
+			if market.chanceBought >= -3:
+				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought])):
+					market.chanceBought-=1
 			if ct.clickInteract(market.nextRect, pressDown):
 				marketpage = 1
 		elif marketpage == 1:
 			market.bagPage(screen)
-			if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeBag(market.bagPrice[market.bagBought])):
-				market.bagBought+=1
+			if market.bagBought >= -3:
+				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeBag(market.bagPrice[market.bagBought])):
+					market.bagBought-=1
 			if ct.clickInteract(market.nextRect, pressDown):
 				marketpage = 0
 

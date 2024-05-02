@@ -11,17 +11,13 @@ class Player:
 		self.delta:float
 		self.screen: pygame.Surface
 		###load image
-		self.baseImage = pygame.image.load('resources/guyNice.png').convert_alpha()
-		self.baseImageRight = pygame.image.load('resources/guyNiceRight.png').convert_alpha()
+		self.baseImage = pygame.image.load('resources/guy.png').convert_alpha()
+		self.baseImageRight = pygame.image.load('resources/guyR.png').convert_alpha()
 		self.baseBlaster = pygame.image.load('resources/bigfist.png').convert_alpha()
-		###give images correct sizes (96 pixels and 75 pixels respectively)
-		#/1200
-		self.defaultSizeImage = pygame.transform.smoothscale_by(self.baseImage,96/1100)#self.baseImage.get_rect().height)
-		self.defaultSizeImageRight = pygame.transform.smoothscale_by(self.baseImageRight,96/1100)#self.baseImage.get_rect().height)
 		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 95/self.baseBlaster.get_rect().width)
 		###scales images to resolution
 		self.BlasterImage = self.defaultSizeBlaster
-		self.image = self.defaultSizeImage
+		self.image = self.baseImage
 		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, 0)
 		#player states
 		self.vel = Vector2(0,0)
@@ -34,7 +30,7 @@ class Player:
 		self.handAngle: float
 		#stats
 		self.inventory = []
-		self.money = 0
+		self.money = 100000000000000
 		self.bait = 100
 		#upgrade variables
 		self.chance = 0 # add 3
@@ -95,14 +91,14 @@ class Player:
 		if keys[pygame.K_a]:
 			if self.vel.x > -self.maxspeed:
 				self.vel.x -= 15
-			self.image = self.defaultSizeImage
+			self.image = self.baseImage
 			self.direction = -1
 
 		if keys[pygame.K_d]:
 			if self.vel.x < self.maxspeed:
 				self.vel.x += 15
 
-			self.image = self.defaultSizeImageRight
+			self.image = self.baseImageRight
 			self.direction = 1
 
 		if not keys[pygame.K_a] and not keys[pygame.K_d]:
