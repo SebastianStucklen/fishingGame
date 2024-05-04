@@ -198,6 +198,15 @@ class SellStation:
 		# self.bagPrice = [150,4050,1350,450]
 		self.bagPrice = [180, "SOLD OUT",1440,720,360]
 
+		self.baitImg = pygame.image.load("resources/bait.png")
+		self.baitPrice = 10
+		self.baitDesc = [
+			"buy some bait",
+			"catch fish (maybe)",
+			f"cost: {self.baitPrice}",
+		]
+		
+
 		self.selecting = False
 		self.isSelling = False
 		self.isUpgrading = False
@@ -300,6 +309,28 @@ class SellStation:
 		textRect = text.get_rect()
 		textRect.centerx = 1000
 		screen.blit(text, (textRect.x,line))
+			
+		screen.blit(close, (15, 15))
+
+
+	def baitPage(self,screen: pygame.Surface):
+		self.close = Rect(15, 15, 75,75)
+		screen.blit(self.baitImg, self.posterRect)
+		screen.blit(self.nextImg,self.nextRect)
+		screen.blit(self.buyImg,self.buyRect)
+
+		font = pygame.font.Font(None, 60)
+		line = 250-100
+
+		text = font.render(self.baitDesc[0],1,(20,30,0))
+			
+
+		for i in range(len(self.baitDesc)):
+			text = font.render(self.baitDesc[i],1,(20,30,0))
+			line+=64
+			textRect = text.get_rect()
+			textRect.centerx = 1000
+			screen.blit(text, (textRect.x,line))
 			
 		screen.blit(close, (15, 15))
 

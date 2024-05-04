@@ -135,15 +135,19 @@ while not doExit:
 	elif gamestate == "upgrading":
 		screen.fill((70, 130, 10))
 
- 
 		if marketpage == 0:
+			market.baitPage(screen)
+			ct.clickInteract(market.buyRect, pressDown, lambda: guy.baitUp(market.baitPrice))
+			if ct.clickInteract(market.nextRect, pressDown):
+				marketpage = 1
+		elif marketpage == 1:
 			market.chancePage(screen)
 			if market.chanceBought >= -3:
 				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought])):
 					market.chanceBought-=1
 			if ct.clickInteract(market.nextRect, pressDown):
-				marketpage = 1
-		elif marketpage == 1:
+				marketpage = 2
+		elif marketpage == 2:
 			market.bagPage(screen)
 			if market.bagBought >= -3:
 				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeBag(market.bagPrice[market.bagBought])):

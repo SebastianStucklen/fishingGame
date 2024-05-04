@@ -30,8 +30,8 @@ class Player:
 		self.handAngle: float
 		#stats
 		self.inventory = []
-		self.money = 100000000000000
-		self.bait = 100
+		self.money = 10
+		self.bait = 5
 		#upgrade variables
 		self.chance = 0 # add 3
 		self.bagsize = 3 # add 3
@@ -171,6 +171,14 @@ class Player:
 		if self.money >= cost:
 			self.money -= cost
 			self.maxspeed+=60
+			return True
+		else:
+			return False
+	
+	def baitUp(self,cost):
+		if self.money >= cost:
+			self.money -= cost
+			self.bait+=1
 			return True
 		else:
 			return False
