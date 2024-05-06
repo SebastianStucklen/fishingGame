@@ -23,6 +23,8 @@ defaultImg = pygame.image.load("default.png")
 interactImg = pygame.image.load("interact.png")
 bgImage = pygame.image.load("resources/grass5.png").convert()
 invImage = pygame.image.load("resources/sack.png")
+shopImg = pygame.image.load("resources/shop1.png").convert_alpha()
+
 
 font = pygame.font.Font(None, 52)
 
@@ -40,6 +42,16 @@ def doNothing():
 	return True
 gamestate = "main"
 
+titlepage = True
+while titlepage:
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			doExit = True
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			titlepage = False
+	
+
+
 tutorial(screen)
 tutorials = [False,False,False]
 
@@ -52,7 +64,7 @@ Music.music.load('resources/thejazzpiano.mp3')
 Music.music.play(-1)
 Music.music.set_volume(0.7)
 
-gameTime = 0
+gameTime = 0 
 deltaList = []
 teste6 = 0
 while not doExit:
@@ -116,7 +128,7 @@ while not doExit:
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
 		Music.music.pause()
-
+		screen.fill((176, 115, 82))
 		if Music.get_busy() == False:
 			Music.Sound.play(shop, -1)
 
@@ -133,7 +145,8 @@ while not doExit:
 		
 	#-------------------- upgrades -------------------
 	elif gamestate == "upgrading":
-		screen.fill((70, 130, 10))
+		screen.fill((151, 70, 23))
+		screen.blit(shopImg,(0,0))
 
 		if marketpage == 0:
 			market.baitPage(screen)
@@ -142,22 +155,26 @@ while not doExit:
 				marketpage = 1
 		elif marketpage == 1:
 			market.chancePage(screen)
-			if market.chanceBought >= -3:
+			if market.chanceBought >= -4:
 				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeChance(market.chancePrice[market.chanceBought])):
 					market.chanceBought-=1
 			if ct.clickInteract(market.nextRect, pressDown):
 				marketpage = 2
 		elif marketpage == 2:
 			market.bagPage(screen)
-			if market.bagBought >= -3:
+			if market.bagBought >= -4:
 				if ct.clickInteract(market.buyRect, pressDown, lambda: guy.upgradeBag(market.bagPrice[market.bagBought])):
 					market.bagBought-=1
 			if ct.clickInteract(market.nextRect, pressDown):
 				marketpage = 0
 
+		
+
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(market.close, pressDown):
 			market.select(True)
 			gamestate = "market"
+		
+
 
 	#-------------------- selling -------------------
 	elif gamestate == "selling":

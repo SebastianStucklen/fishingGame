@@ -173,21 +173,21 @@ class SellStation:
 		self.nextImg = pygame.image.load("resources/next.png")
 		self.nextRect = Rect(1450,50,100,100)
 		self.buyImg = pygame.image.load("resources/buy.png")
-		self.buyRect = Rect(270,650,240,135)
+		self.buyRect = Rect(285,690,240,135)
 
-		self.posterRect = Rect(150,40,480,600)
+		self.posterRect = Rect(165,40,480,600)
 
 		self.chanceImg = pygame.image.load("resources/luck.png")
 		self.chanceDesc = [
 			#4 lines maximum
 			"upgrade your luck",
-			"catch rarer fish more frequently",
+			"catch rarer fish",
 			# "placeholder line, dont blit, place cost here",
 			# "placeholder line, dont blit, place upgrade purchase count here",
 		]
 		self.chanceBought = 0
-		# self.chancePrice = [240, 6480, 2160, 720]
-		self.chancePrice = [240, "SOLD OUT",1920, 960, 480]
+		self.chancePrice = [240, "SOLD OUT", 19440, 6480, 2160, 720]
+		# self.chancePrice = [240, "SOLD OUT",1920, 960, 480]
 
 		self.bagImg = pygame.image.load("resources/bag.png")
 		self.bagDesc = [
@@ -195,8 +195,8 @@ class SellStation:
 			"carry more fish",
 		]
 		self.bagBought = 0
-		# self.bagPrice = [150,4050,1350,450]
-		self.bagPrice = [180, "SOLD OUT",1440,720,360]
+		self.bagPrice = [150,"SOLD OUT", 12150, 4050,1350,450]
+		# self.bagPrice = [180, "SOLD OUT",1440,720,360]
 
 		self.baitImg = pygame.image.load("resources/bait.png")
 		self.baitPrice = 10
@@ -255,23 +255,23 @@ class SellStation:
 		font = pygame.font.Font(None, 60)
 		line = 250-100
 
-		text = font.render(self.chanceDesc[0],1,(20,30,0))
+		text = font.render(self.chanceDesc[0],1,(255,250,190))
 			
 
 		for i in range(len(self.chanceDesc)):
-			text = font.render(self.chanceDesc[i],1,(20,30,0))
+			text = font.render(self.chanceDesc[i],1,(255,250,190))
 			line+=64
 			textRect = text.get_rect()
 			textRect.centerx = 1000
 			screen.blit(text, (textRect.x,line))
 		
-		text = font.render(f"Cost: {self.chancePrice[self.chanceBought]}",1,(20,30,0))
+		text = font.render(f"Cost: {self.chancePrice[self.chanceBought]}",1,(255,250,190))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
 		screen.blit(text, (textRect.x,line))
 
-		text = font.render(f"# purchased: {abs(self.chanceBought)}",1,(20,30,0))
+		text = font.render(f"# purchased: {abs(self.chanceBought)}",1,(255,250,190))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
@@ -288,23 +288,23 @@ class SellStation:
 		font = pygame.font.Font(None, 60)
 		line = 250-100
 
-		text = font.render(self.bagDesc[0],1,(20,30,0))
+		text = font.render(self.bagDesc[0],1,(255,250,190))
 			
 
 		for i in range(len(self.bagDesc)):
-			text = font.render(self.bagDesc[i],1,(20,30,0))
+			text = font.render(self.bagDesc[i],1,(255,250,190))
 			line+=64
 			textRect = text.get_rect()
 			textRect.centerx = 1000
 			screen.blit(text, (textRect.x,line))
 		
-		text = font.render(f"Cost: {self.bagPrice[self.bagBought]}",1,(20,30,0))
+		text = font.render(f"Cost: {self.bagPrice[self.bagBought]}",1,(255,250,190))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
 		screen.blit(text, (textRect.x,line))
 
-		text = font.render(f"# purchased: {abs(self.bagBought)}",1,(20,30,0))
+		text = font.render(f"# purchased: {abs(self.bagBought)}",1,(255,250,190))
 		line+=64
 		textRect = text.get_rect()
 		textRect.centerx = 1000
@@ -322,11 +322,11 @@ class SellStation:
 		font = pygame.font.Font(None, 60)
 		line = 250-100
 
-		text = font.render(self.baitDesc[0],1,(20,30,0))
+		text = font.render(self.baitDesc[0],1,(255,250,190))
 			
 
 		for i in range(len(self.baitDesc)):
-			text = font.render(self.baitDesc[i],1,(20,30,0))
+			text = font.render(self.baitDesc[i],1,(255,250,190))
 			line+=64
 			textRect = text.get_rect()
 			textRect.centerx = 1000
