@@ -9,11 +9,10 @@ class Player:
 	''':)'''
 	def __init__(self,scale):
 		self.delta:float
-		self.screen: pygame.Surface
 		###load image
 		self.baseImage = pygame.image.load('resources/guy.png').convert_alpha()
 		self.baseImageRight = pygame.image.load('resources/guyR.png').convert_alpha()
-		self.baseBlaster = pygame.image.load('resources/bigfist.png').convert_alpha()
+		self.baseBlaster = pygame.image.load('resources/bigfist2.png').convert_alpha()
 		self.defaultSizeBlaster = pygame.transform.smoothscale_by(self.baseBlaster, 95/self.baseBlaster.get_rect().width)
 		###scales images to resolution
 		self.BlasterImage = self.defaultSizeBlaster
@@ -58,6 +57,19 @@ class Player:
 		
 		self.font = pygame.font.Font(None, 52)
 
+	def saveData(self):
+		playerSave = {#0:self.inventory,
+				1:self.money,2:self.bait,3:self.chance,4:self.bagsize}
+		return playerSave
+	
+	def loadData(self, save: dict):
+		# self.inventory = save[0]
+		self.money = save[1]
+		self.bait = save[2]
+		self.chance = save[3]
+		self.bagsize = save[4]
+		
+
 	def mouseMove(self):
 		self.newMousePos = Vector2(pygame.mouse.get_pos())
 
@@ -67,18 +79,18 @@ class Player:
 		
 		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, self.handAngle)
 	
-	def draw(self):
+	def draw(self,screen):
 		rect_to_draw = Rect(self.image.get_rect())
 		rect_to_draw.center = (int(self.centerpos.x), int(self.centerpos.y))
 
 		rect_to_fish = Rect(self.transformed_Blaster.get_rect())
 		rect_to_fish.center = (int(self.centerpos.x), int(self.centerpos.y))
 
-		self.screen.blit(
+		screen.blit(
 			self.transformed_Blaster,
 			rect_to_fish
 		)
-		self.screen.blit(
+		screen.blit(
 			self.image,
 			rect_to_draw 
 		)
@@ -130,7 +142,6 @@ class Player:
 	def update(self,delta,screen):
 		'''Runs specific player functions every frame'''
 		self.delta = delta
-		self.screen = screen
 
 		self.playerInput()
 		self.move()
@@ -140,16 +151,16 @@ class Player:
 		self.rect = Rect(int(self.centerpos.x-50), int(self.centerpos.y-50), 100, 100)
 		self.dirt.update(screen, delta, self.feetpos,self.vel)
 
-		self.draw()
+		self.draw(screen)
 
-	def statDisplay(self, gamestate = "main"):
+	def statDisplay(self, screen, gamestate = "main"):
 		if gamestate == "main":
 			wallet	= self.font.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
 			fish	= self.font.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
 			bait	= self.font.render(f"Bait:    {str(self.bait)}", 1, (20, 30, 0))
-			self.screen.blit(wallet, (15,775))
-			self.screen.blit(fish,	 (15,815))
-			self.screen.blit(bait,	 (15,855))
+			screen.blit(wallet, (15,775))
+			screen.blit(fish,	 (15,815))
+			screen.blit(bait,	 (15,855))
 
 	def upgradeChance(self, cost):
 		if self.money >= cost:

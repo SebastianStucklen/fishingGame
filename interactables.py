@@ -33,10 +33,10 @@ class FishingHole:
 		screen.fill((0,0,0))
 		font = pygame.font.Font(None, 200)
 		for i in range(length):
-			prompt = random.choice(["Z","X","C","V"])
+			prompt = random.choice(["F","I","S","H"])
 			if i > 0:
 				while prompt == letterData[i-1][-1]:
-					prompt = random.choice(["Z","X","C","V"])
+					prompt = random.choice(["F","I","S","H"])
 			fish.append(prompt)
 			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
 
@@ -83,14 +83,14 @@ class FishingHole:
 		
 	def inputs(self):
 		keys = pygame.key.get_pressed()
-		if keys[pygame.K_z]:
-			return "Z"
-		elif keys[pygame.K_x]:
-			return "X"
-		elif keys[pygame.K_c]:
-			return "C"
-		elif keys[pygame.K_v]:
-			return "V"
+		if keys[pygame.K_f]:
+			return "F"
+		elif keys[pygame.K_i]:
+			return "I"
+		elif keys[pygame.K_s]:
+			return "S"
+		elif keys[pygame.K_h]:
+			return "H"
 		else:
 			return "void"
 	
@@ -114,7 +114,7 @@ def tutorial(screen):
 			pass
 		line = 250-100
 		for i in range(len(description)):
-			text = font.render(description[i],0,(255,255,255))
+			text = font.render(description[i],0,(0,0,0))
 			line+=100
 			textRect = text.get_rect()
 			textRect.centerx = SCREEN_RECT.centerx

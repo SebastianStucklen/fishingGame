@@ -35,7 +35,7 @@ class CursorTools:
 					objPos:Rect, 
 					playerPos: Vector2, 
 					function:Callable[[], Any], 
-					range: int = 200, 
+					range: int = 400, 
 					pressDown: bool = True):
 		'''for player specific interaction, with range. can be passed a function to run on click, as well as a bool variable meant to be used with pygame.mouse.MOUSEBUTTONDOWN'''
 		if abs(math.dist(pygame.mouse.get_pos(),playerPos)) <= range:

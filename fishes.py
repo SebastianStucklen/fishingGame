@@ -44,8 +44,6 @@ class Fishes:
 	baseImg = placeholder
 
 	def __init__(self, size: float = 1.00):
-		self.delta:float
-		self.screen: pygame.Surface
 
 		self.size = size #percent
 		self.price = 30*size
@@ -80,11 +78,16 @@ class Fishes:
 
 			for i in range(len(self.description)):
 				text = font.render(self.description[i],1,(20,30,0))
-				line+=100
+				line+=90
 				textRect = text.get_rect()
 				textRect.centerx = SCREEN_RECT.centerx
 				screen.blit(text, (textRect.x,line))
-			
+			line+=90
+			text = font.render("press [esc] or the X to close",1,(20,30,0))
+			textRect = text.get_rect()
+			textRect.centerx = SCREEN_RECT.centerx
+			screen.blit(text, (textRect.x, line))
+
 			screen.blit(close, (imgRect.right+20, imgRect.top+50))
 			self.close = Rect(imgRect.right+20, imgRect.top+50, 75,75)
 	

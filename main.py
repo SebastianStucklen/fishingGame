@@ -1,3 +1,5 @@
+import pickle
+
 import pygame
 from globals import FPS, SCREEN_SIZE, CursorTools, SCREEN_RECT
 pygame.init()
@@ -12,6 +14,7 @@ from interactables import FishingHole, tutorial, SellStation, invTutorial, Home
 from fishgen import fishgen
 from fishgen import speciesGen
 from fishes import Fishes
+
 # from pygame import mixer
 Music.init()
 close = pygame.image.load('resources/close.png')
@@ -19,17 +22,28 @@ close = pygame.image.load('resources/close.png')
 doExit = False
 clock = pygame.time.Clock()
 
-defaultImg = pygame.image.load("default.png")
-interactImg = pygame.image.load("interact.png")
+# defaultImg = pygame.image.load("default.png")
+interactImg = pygame.image.load("resources/interact.png").convert_alpha()
 bgImage = pygame.image.load("resources/grass5.png").convert()
 invImage = pygame.image.load("resources/sack.png")
 shopImg = pygame.image.load("resources/shop1.png").convert_alpha()
+titleImg = pygame.image.load("resources/title.png")
 
 
 font = pygame.font.Font(None, 52)
+fontBig = pygame.font.Font(None, 52)
 
 ct = CursorTools(interactImg)
+
 guy = Player(1)
+
+try:
+	with open("playersave.txt", "rb") as load_file:
+		save = pickle.load(load_file)
+	guy.loadData(save)
+except:
+	pass
+
 lake = FishingHole()
 teste1 = Fishes()
 market = SellStation()
@@ -49,8 +63,10 @@ while titlepage:
 			doExit = True
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			titlepage = False
+	screen.blit(titleImg,(0,0))
+	pygame.display.flip()
 	
-
+screen.fill((153,217,234))
 
 tutorial(screen)
 tutorials = [False,False,False]
@@ -67,6 +83,8 @@ Music.music.set_volume(0.7)
 gameTime = 0 
 deltaList = []
 teste6 = 0
+
+
 while not doExit:
 	delta = clock.tick(FPS) / 1000
 	deltaList.append(delta)
@@ -94,13 +112,13 @@ while not doExit:
 			pressDown = True
 
 
-		
+
 	screen.blit(bgImage,(0,0))
 
 	#-------------------------------------- MAIN ----------------------------------------
 	if gamestate == "main":
-		if guy.bait > 1 and len(guy.inventory) < guy.bagsize:
-			if ct.playerInteract(lake.rect,guy.centerpos, doNothing, 200, pressDown):
+		if guy.bait > 0 and len(guy.inventory) < guy.bagsize:
+			if ct.playerInteract(lake.rect,guy.centerpos, doNothing, 400, pressDown):
 				guy.bait-=1
 				gamestate = "lake"
 
@@ -119,11 +137,21 @@ while not doExit:
 		if ct.clickInteract(Rect(750,800,100,100)):
 			gamestate = "inventory"
 
-		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 200, pressDown):
+		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 400, pressDown):
 			gamestate = "market"
+
+
 		if len(guy.inventory) >= guy.bagsize:
 			if lake.rect.collidepoint(pygame.mouse.get_pos()):
+				text = font.render("you're out of space!",1,(0,0,0))
 				screen.blit(close, pygame.mouse.get_pos())
+				screen.blit(text,(pygame.mouse.get_pos()[0]+80,pygame.mouse.get_pos()[1]))
+		elif guy.bait < 1:
+			if lake.rect.collidepoint(pygame.mouse.get_pos()):
+				text = font.render("you're out of bait!",1,(0,0,0))
+				screen.blit(close, pygame.mouse.get_pos())
+				screen.blit(text,(pygame.mouse.get_pos()[0]+80,pygame.mouse.get_pos()[1]))
+				
 	
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
@@ -264,10 +292,13 @@ while not doExit:
 	if gamestate == "statscreen":
 		pass
 	else:
-		guy.statDisplay()
+		guy.statDisplay(screen)
 	ct.customCursor(screen)
 	ct.canClick = False
 	pygame.display.flip()
 
-
 pygame.quit()
+
+savestate = guy.saveData()
+with open('playersave.txt','wb') as store_file:
+	pickle.dump(savestate,store_file)
