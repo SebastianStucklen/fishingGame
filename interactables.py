@@ -10,11 +10,16 @@ from pygame import mixer
 # mixer	.init()
 
 correct = mixer.Sound("resources/correct.wav")
-finish = mixer.Sound("resources/success2.mp3")
 close = pygame.image.load('resources/close.png')
 tutorialBg = pygame.image.load('resources/tutorial.png')
-mixer.Sound.set_volume(finish,0.6)
 mixer.Sound.set_volume(correct,0.8)
+
+def mute(bewl:bool):
+	if bewl:
+		mixer.Sound.set_volume(correct,0)
+	else:
+		mixer.Sound.set_volume(correct,0.8)
+
 class FishingHole:
 	
 	def __init__(self):

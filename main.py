@@ -1,3 +1,6 @@
+gameVersion = "1.2"
+
+
 import pickle
 
 import pygame
@@ -10,42 +13,55 @@ from pygame.key import get_pressed
 from pygame import mixer as Music
 
 from player import Player
-from interactables import FishingHole, tutorial, SellStation, invTutorial, Home
+from interactables import FishingHole, tutorial, SellStation, invTutorial, Home, mute
 from fishgen import fishgen
 from fishgen import speciesGen
 from fishes import Fishes
 
 # from pygame import mixer
 Music.init()
-close = pygame.image.load('resources/close.png')
+
+close = pygame.image.load('resources/close.png').convert_alpha()
+yes = pygame.image.load('resources/yes.png').convert_alpha()
 
 doExit = False
 clock = pygame.time.Clock()
 
 # defaultImg = pygame.image.load("default.png")
 interactImg = pygame.image.load("resources/interact.png").convert_alpha()
-bgImage = pygame.image.load("resources/grass5.png").convert()
-invImage = pygame.image.load("resources/sack.png")
-shopImg = pygame.image.load("resources/shop1.png").convert_alpha()
-titleImg = pygame.image.load("resources/title.png")
+bgImage 	= pygame.image.load("resources/grass5.png").convert()
 
+shopImg		= pygame.image.load("resources/shop1.png").convert_alpha()
+titleImg	= pygame.image.load("resources/title.png")
+
+invImg		= pygame.image.load("resources/sack.png")
+statsImg	= pygame.image.load("resources/stats.png")
+settingImg 	= pygame.image.load("resources/settings.png")
+menuImg 	= pygame.image.load("resources/menuBG.png")
+invBgImg	= pygame.image.load("resources/menuBG2.png")
+setMenuImg	= pygame.image.load('resources/menuBG_lazy.png')
+menuRect	= Rect(400,200,800,500)
+menuRect2	= Rect(300,150,1000,600)
+unmuted		= pygame.image.load("resources/unmuted.png").convert_alpha()
+muted		= pygame.image.load("resources/muted.png").convert_alpha()
+muteRect	= Rect(870,240,260,260)
+quitButton	= pygame.image.load("resources/close_game.png")
+quitRect	= Rect(360,240,480,260)
+
+shop = Music.Sound('resources/elevator.mp3')
+waves = Music.Sound('resources/waves.wav')
+
+Music.music.load('resources/thejazzpiano.mp3')
 
 font = pygame.font.Font(None, 52)
-fontBig = pygame.font.Font(None, 52)
+fontBig = pygame.font.Font(None, 80)
+temp7 = font.render(f"V {gameVersion}",1,(0,0,0))
 
 ct = CursorTools(interactImg)
 
 guy = Player(1)
 
-try:
-	with open("playersave.txt", "rb") as load_file:
-		save = pickle.load(load_file)
-	guy.loadData(save)
-except:
-	pass
-
 lake = FishingHole()
-teste1 = Fishes()
 market = SellStation()
 marketpage = 0
 home = Home()
@@ -54,9 +70,12 @@ sellwhat = 0
 
 def doNothing():
 	return True
-gamestate = "main"
+
 
 titlepage = True
+Music.Sound.play(waves,-1)
+Music.Sound.play(waves,-1)
+Music.Sound.play(waves,-1)
 while titlepage:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -65,36 +84,40 @@ while titlepage:
 			titlepage = False
 	screen.blit(titleImg,(0,0))
 	pygame.display.flip()
-	
+
+try:
+	with open("playersave.txt", "rb") as load_file:
+		temp4 = pickle.load(load_file)
+	guy.loadData(temp4)
+except:
+	pass
+
+
 screen.fill((153,217,234))
 
 tutorial(screen)
 tutorials = [False,False,False]
+Music.Sound.stop(waves)
 
 pressDown = False
 unpress = False
 
+gameTime = 0 
+deltaList = []
+quitTick = 0
 
-shop = Music.Sound('resources/elevator.mp3')
-Music.music.load('resources/thejazzpiano.mp3')
 Music.music.play(-1)
 Music.music.set_volume(0.7)
 
-gameTime = 0 
-deltaList = []
-teste6 = 0
-
+gamestate = "main"
 
 while not doExit:
 	delta = clock.tick(FPS) / 1000
 	deltaList.append(delta)
 	gameTime += delta
 	if round(gameTime,3) % 0.5 < delta:
-		teste6+=1
 		deltaList.sort()
 		print(
-			# teste6,
-			# " --- ",
 			"GAMETIME: ", round(gameTime,1), " --- ",
 			"MIN: ", deltaList[0], " --- ",
 			"MED: ", deltaList[(len(deltaList)//2)-1], " --- ",
@@ -102,21 +125,47 @@ while not doExit:
 			"GAMESTATE: ", gamestate, " --- ",
 		)
 		deltaList.clear()
+	if round(gameTime,4) % 30 < delta:
+		savestate = guy.saveData()
+		print("AUTOSAVING...")
+
 	pressDown = False
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			doExit = True #lets you quit program
+			gamestate = "quit" #lets you quit program
+			quitTick+=1
 		if event.type == pygame.KEYDOWN and get_pressed()[pygame.K_e]:
 			gamestate = "inventory"
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			pressDown = True
+			
+	if gamestate == "quit":
+		pygame.draw.rect(screen,(255,255,255),(400,200,800,500))
+		quitText = font.render("Would you like to quit?",1,(235,0,0),(239,228,176))
+		temp1 = quitText.get_rect()
+		temp1.center = SCREEN_RECT.center
+		temp2 = close.get_rect()
+		temp3 = temp2.copy()
+		temp2.center = (SCREEN_RECT.centerx-200,SCREEN_RECT.centery+100)
+		temp3.center = (SCREEN_RECT.centerx+200,SCREEN_RECT.centery+100)
+		screen.blit(quitText,temp1)
+		screen.blit(close,temp2)
+		screen.blit(yes,temp3)
+		if ct.clickInteract(temp2):
+			gamestate = "main"
+			quitTick = 0
+		if ct.clickInteract(temp3):
+			doExit = True
+	if quitTick >=2:
+		doExit = True
 
 
-
-	screen.blit(bgImage,(0,0))
+	
 
 	#-------------------------------------- MAIN ----------------------------------------
 	if gamestate == "main":
+		screen.blit(bgImage,(0,0))
+
 		if guy.bait > 0 and len(guy.inventory) < guy.bagsize:
 			if ct.playerInteract(lake.rect,guy.centerpos, doNothing, 400, pressDown):
 				guy.bait-=1
@@ -133,10 +182,15 @@ while not doExit:
 
 		guy.update(delta,screen)
 
-		screen.blit(invImage,(750,800))
-		if ct.clickInteract(Rect(750,800,100,100)):
+		screen.blit(invImg,(640,800))
+		screen.blit(settingImg,(750,800))
+		screen.blit(statsImg,(860,800))
+		if ct.clickInteract(Rect(640,800,100,100)):
 			gamestate = "inventory"
-
+		if ct.clickInteract(Rect(860,800,100,100)):
+			gamestate = "statscreen"
+		if ct.clickInteract(Rect(750,800,100,100)):
+			gamestate = "settings"
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 400, pressDown):
 			gamestate = "market"
 
@@ -151,7 +205,9 @@ while not doExit:
 				text = font.render("you're out of bait!",1,(0,0,0))
 				screen.blit(close, pygame.mouse.get_pos())
 				screen.blit(text,(pygame.mouse.get_pos()[0]+80,pygame.mouse.get_pos()[1]))
-				
+
+		
+		screen.blit(temp7,(760,10))		
 	
 	#-------------------------------------- MARKET ----------------------------------------
 	if gamestate == "market":
@@ -169,8 +225,7 @@ while not doExit:
 		if ct.clickInteract(market.sellRect, True, market.sellButton):
 			gamestate = "selling"
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65), pressDown):
-			gamestate = "main"
-		
+			gamestate = "main"	
 	#-------------------- upgrades -------------------
 	elif gamestate == "upgrading":
 		screen.fill((151, 70, 23))
@@ -201,38 +256,34 @@ while not doExit:
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(market.close, pressDown):
 			market.select(True)
 			gamestate = "market"
-		
-
-
 	#-------------------- selling -------------------
 	elif gamestate == "selling":
-		screen.fill((70, 130, 10))
-		teste2 = [100,1]
+		screen.blit(invBgImg,(0,0))
+		temp5 = [100,1]
 		screen.blit(close, (20,20))
-		i = 0
-		while i < len(guy.inventory):
-			guy.inventory[i].invDisplay(screen,teste2)
-			if teste2[0] < 1300:
-				teste2[0]+=200
+		temp6 = 0
+		while temp6 < len(guy.inventory):
+			guy.inventory[temp6].invDisplay(screen,temp5)
+			if temp5[0] < 1300:
+				temp5[0]+=200
 			else: 
-				teste2[0] = 1
-				teste2[1] += 120
+				temp5[0] = 1
+				temp5[1] += 120
 			market.drawButtons(screen)
-			if ct.clickInteract(guy.inventory[i].invImgRect, pressDown):
+			if ct.clickInteract(guy.inventory[temp6].invImgRect, pressDown):
 				market.selling(True)
-				sellwhat = i
+				sellwhat = temp6
 			if market.isSelling and ct.clickInteract(market.sharedRect, pressDown):
 				guy.money+=guy.inventory[sellwhat].price
 				guy.inventory.pop(sellwhat)
 				market.selling(False)
 				sellwhat = 0
-				i=-1
-			i+=1
+				temp6=-1
+			temp6+=1
 
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
 			market.select(True)
-			gamestate = "market"
-	
+			gamestate = "market"	
 	else:
 		Music.Sound.stop(shop)
 		Music.music.unpause()
@@ -242,8 +293,8 @@ while not doExit:
 		whatfish = fishgen(guy.chance)
 		if lake.quicktime(screen,delta,whatfish[1]):
 			guy.inventory.append(speciesGen(whatfish[0]))
-			for i in range(len(guy.inventory)-1):
-				guy.inventory[i].toggleBigView(False)
+			for temp6 in range(len(guy.inventory)-1):
+				guy.inventory[temp6].toggleBigView(False)
 			newest = len(guy.inventory)-1
 			gamestate = "sub-inventory1"
 
@@ -256,8 +307,7 @@ while not doExit:
 				if get_pressed()[pygame.K_ESCAPE]:
 					guy.inventory[newest].toggleBigView(False)
 		else:
-			gamestate = "main"
-	
+			gamestate = "main"	
 	if gamestate == "sub-inventory2":	
 		screen.fill((70, 130, 10))
 		if guy.inventory[newest].bigView == True:
@@ -268,37 +318,64 @@ while not doExit:
 					gamestate = "inventory"
 		else:
 			gamestate = "inventory"
-
 	if gamestate == "inventory":
-		screen.fill((70, 130, 10))
-		teste2 = [100,1]
+		screen.blit(invBgImg,(0,0))
+		temp5 = [100,1]
 		screen.blit(close, (20,20))
-		for i in range(len(guy.inventory)):
-			guy.inventory[i].invDisplay(screen,teste2)
-			if teste2[0] < 1300:
-				teste2[0]+=200
+		for temp6 in range(len(guy.inventory)):
+			guy.inventory[temp6].invDisplay(screen,temp5)
+			if temp5[0] < 1300:
+				temp5[0]+=200
 			else: 
-				teste2[0] = 1
-				teste2[1] += 120
+				temp5[0] = 1
+				temp5[1] += 120
 			if tutorials[0] == True:
-				if ct.clickInteract(guy.inventory[i].invImgRect, True, lambda: guy.inventory[i].toggleBigView(True)):
-					newest = i
+				if ct.clickInteract(guy.inventory[temp6].invImgRect, True, lambda: guy.inventory[temp6].toggleBigView(True)):
+					newest = temp6
 					gamestate = "sub-inventory2"
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
 			gamestate = "main"
 		if tutorials[0] == False:
 			tutorials[0] = invTutorial(screen)
-	
+	#-------------------------------------- MENUS -------------------------------------------
 	if gamestate == "statscreen":
-		pass
+		screen.blit(menuImg,menuRect)
+		screen.blit(close,(1120,220))
+		guy.statDisplay(screen,gamestate)
+		if ct.clickInteract(Rect(1120,220,60,60)) or get_pressed()[pygame.K_ESCAPE]:
+			gamestate = "main"
 	else:
 		guy.statDisplay(screen)
+	
+	if gamestate == "settings":
+		version = fontBig.render(gameVersion,1,(0,0,0))
+
+		screen.blit(setMenuImg,menuRect2)
+		screen.blit(close,(1180,200))
+		screen.blit(version,(490,625))
+		screen.blit(unmuted,muteRect)
+		screen.blit(quitButton,quitRect)
+
+
+		if 2+2 != 4:
+			Music.Sound.set_volume(shop,0)
+			Music.music.set_volume(0)
+			mute(True)
+		elif 1+1 == 3:
+			mute(False)	
+		if ct.clickInteract(Rect(1180,200,60,60)) or get_pressed()[pygame.K_ESCAPE]:
+			gamestate = "main"
+
 	ct.customCursor(screen)
 	ct.canClick = False
 	pygame.display.flip()
 
-pygame.quit()
+for temp6 in range(len(guy.inventory)):
+	guy.money+=guy.inventory[temp6].price
+guy.inventory.clear()
 
 savestate = guy.saveData()
 with open('playersave.txt','wb') as store_file:
 	pickle.dump(savestate,store_file)
+
+pygame.quit()

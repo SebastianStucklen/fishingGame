@@ -50,4 +50,5 @@ class CursorTools:
 	def customCursor(self, screen: pygame.Surface):
 		'''run every loop to draw an alert on mouse whenever something is clickable'''
 		if self.canClick:
-			screen.blit(self.clickable, pygame.mouse.get_pos())
+			temp = pygame.mouse.get_pos()
+			screen.blit(self.clickable, (temp[0]-30,temp[1]-30))

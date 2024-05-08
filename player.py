@@ -56,14 +56,12 @@ class Player:
 		)
 		
 		self.font = pygame.font.Font(None, 52)
+		self.font2 = pygame.font.Font(None, 80)
 
 	def saveData(self):
-		playerSave = {#0:self.inventory,
-				1:self.money,2:self.bait,3:self.chance,4:self.bagsize}
-		return playerSave
-	
+		playerSave = {1:self.money,2:self.bait,3:self.chance,4:self.bagsize}
+		return playerSave	
 	def loadData(self, save: dict):
-		# self.inventory = save[0]
 		self.money = save[1]
 		self.bait = save[2]
 		self.chance = save[3]
@@ -71,14 +69,11 @@ class Player:
 		
 
 	def mouseMove(self):
-		self.newMousePos = Vector2(pygame.mouse.get_pos())
-
-	
+		self.newMousePos = Vector2(pygame.mouse.get_pos())	
 	def rotate(self):
 		self.handAngle = math.degrees(math.atan2( self.newMousePos.x-self.centerpos.x, self.newMousePos.y-self.centerpos.y))+180
 		
-		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, self.handAngle)
-	
+		self.transformed_Blaster = pygame.transform.rotate(self.BlasterImage, self.handAngle)	
 	def draw(self,screen):
 		rect_to_draw = Rect(self.image.get_rect())
 		rect_to_draw.center = (int(self.centerpos.x), int(self.centerpos.y))
@@ -94,7 +89,6 @@ class Player:
 			self.image,
 			rect_to_draw 
 		)
-
 	def playerInput(self):
 		'''Gets Input from keyboard
 		| Movement is pixels per second'''
@@ -125,8 +119,7 @@ class Player:
 				self.vel.y += 15
 
 		if not keys[pygame.K_w] and not keys[pygame.K_s]:
-			self.vel.y *= 0.9
-		
+			self.vel.y *= 0.9		
 	def move(self):
 		'''Applies velocity to position'''
 		self.centerpos+=self.vel*self.delta
@@ -134,11 +127,11 @@ class Player:
 			self.feetpos.update(self.centerpos.x-35, self.centerpos.y+35)
 		else:
 			self.feetpos.update(self.centerpos.x+35, self.centerpos.y+35)
-
 	def reverseVel(self):
 		self.vel = -self.vel*1.2
 		self.direction = -self.direction
 	
+
 	def update(self,delta,screen):
 		'''Runs specific player functions every frame'''
 		self.delta = delta
@@ -153,14 +146,26 @@ class Player:
 
 		self.draw(screen)
 
+
 	def statDisplay(self, screen, gamestate = "main"):
 		if gamestate == "main":
 			wallet	= self.font.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
 			fish	= self.font.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
 			bait	= self.font.render(f"Bait:    {str(self.bait)}", 1, (20, 30, 0))
-			screen.blit(wallet, (15,775))
-			screen.blit(fish,	 (15,815))
-			screen.blit(bait,	 (15,855))
+			screen.blit(wallet,	(15,775))
+			screen.blit(fish,	(15,815))
+			screen.blit(bait,	(15,855))
+		if gamestate == "statscreen":
+			wallet	= self.font2.render(f"Fishens: {str(round(self.money))}", 1, (20, 30, 0))
+			fish	= self.font2.render(f"Fish:    {str(len(self.inventory))}/{str(self.bagsize)}", 1, (20, 30, 0))
+			bait	= self.font2.render(f"Bait:    {str(self.bait)}", 1, (20, 30, 0))
+			chance	= self.font2.render(f"Luck: {str(self.chance)}", 1, (20,30,20))
+			screen.blit(wallet,	(580,270))
+			screen.blit(fish,	(580,360))
+			screen.blit(bait,	(580,450))
+			screen.blit(chance,	(580,540))
+
+
 
 	def upgradeChance(self, cost):
 		if self.money >= cost:
