@@ -29,8 +29,8 @@ class Player:
 		self.handAngle: float
 		#stats
 		self.inventory = []
-		self.money = 10
-		self.bait = 5
+		self.money = 20
+		self.bait = 4
 		#upgrade variables
 		self.chance = 0 # add 3
 		self.bagsize = 3 # add 3

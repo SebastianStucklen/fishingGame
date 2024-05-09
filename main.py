@@ -1,4 +1,4 @@
-gameVersion = "1.1.1"
+gameVersion = "1.1.2"
 
 
 import pickle
@@ -21,37 +21,39 @@ from fishes import Fishes
 # from pygame import mixer
 Music.init()
 
-close = pygame.image.load('resources/close.png').convert_alpha()
-yes = pygame.image.load('resources/yes.png').convert_alpha()
+
 
 doExit = False
 clock = pygame.time.Clock()
 
-# defaultImg = pygame.image.load("default.png")
+close = pygame.image.load('resources/close.png').convert_alpha()
+yes = pygame.image.load('resources/yes.png').convert_alpha()
+cornerX = Rect(20,20,65,65)
+
 interactImg = pygame.image.load("resources/interact.png").convert_alpha()
 bgImage 	= pygame.image.load("resources/grass5.png").convert()
 
 shopImg		= pygame.image.load("resources/shop1.png").convert_alpha()
-titleImg	= pygame.image.load("resources/title.png")
+titleImg	= pygame.image.load("resources/title.png").convert()
 
-invImg		= pygame.image.load("resources/sack.png")
-statsImg	= pygame.image.load("resources/stats.png")
-settingImg 	= pygame.image.load("resources/settings.png")
-menuImg 	= pygame.image.load("resources/menuBG.png")
-invBgImg	= pygame.image.load("resources/menuBG2.png")
-setMenuImg	= pygame.image.load('resources/menuBG_lazy.png')
+invImg		= pygame.image.load("resources/sack.png").convert()
+statsImg	= pygame.image.load("resources/stats.png").convert()
+settingImg 	= pygame.image.load("resources/settings.png").convert()
+menuImg 	= pygame.image.load("resources/menuBG.png").convert()
+invBgImg	= pygame.image.load("resources/menuBG2.png").convert()
+setMenuImg	= pygame.image.load('resources/menuBG_lazy.png').convert()
 menuRect	= Rect(400,200,800,500)
-menuRect2	= Rect(300,150,1000,600)
+menuRect2	= Rect(300,50,1000,600)
 unmuted		= pygame.image.load("resources/unmuted.png").convert_alpha()
 muted		= pygame.image.load("resources/muted.png").convert_alpha()
-muteRect	= Rect(870,240,260,260)
-quitButton	= pygame.image.load("resources/close_game.png")
-quitRect	= Rect(360,240,480,260)
+muteRect	= Rect(870,140,260,260)
+quitButton	= pygame.image.load("resources/close_game.png").convert()
+quitRect	= Rect(360,140,480,260)
 
 shop = Music.Sound('resources/elevator.mp3')
 waves = Music.Sound('resources/waves.wav')
-
 Music.music.load('resources/thejazzpiano.mp3')
+isMuted = False
 
 font = pygame.font.Font(None, 52)
 fontBig = pygame.font.Font(None, 80)
@@ -73,7 +75,6 @@ def doNothing():
 
 
 titlepage = True
-Music.Sound.play(waves,-1)
 Music.Sound.play(waves,-1)
 Music.Sound.play(waves,-1)
 while titlepage:
@@ -140,27 +141,51 @@ while not doExit:
 			pressDown = True
 			
 	if gamestate == "quit":
-		pygame.draw.rect(screen,(255,255,255),(400,200,800,500))
+		pygame.draw.rect(screen,(239,228,176),(400,200,800,600))
+		pygame.draw.rect(screen,(0,0,0),(400,200,800,600),20)
 		quitText = font.render("Would you like to quit?",1,(235,0,0),(239,228,176))
 		temp1 = quitText.get_rect()
 		temp1.center = SCREEN_RECT.center
+		quitText2 = font.render("All the fish in your inventory will be sold",1,(0,0,0))
 		temp2 = close.get_rect()
 		temp3 = temp2.copy()
 		temp2.center = (SCREEN_RECT.centerx-200,SCREEN_RECT.centery+100)
 		temp3.center = (SCREEN_RECT.centerx+200,SCREEN_RECT.centery+100)
-		screen.blit(quitText,temp1)
+		screen.blit(quitText,(temp1.x,temp1.y-60))
+		screen.blit(quitText2,(temp1.x-150,temp1.y))
 		screen.blit(close,temp2)
 		screen.blit(yes,temp3)
 		if ct.clickInteract(temp2):
 			gamestate = "main"
 			quitTick = 0
+			pygame.mouse.set_pos(800,500)
 		if ct.clickInteract(temp3):
 			doExit = True
 	if quitTick >=2:
 		doExit = True
-
-
 	
+	if gamestate == "wipe":
+		pygame.draw.rect(screen,(239,228,176),(400,200,800,600))
+		pygame.draw.rect(screen,(0,0,0),(400,200,800,600),20)
+		quitText = font.render("Are you sure you want to wipe your save?",1,(235,0,0),(239,228,176))
+		temp1 = quitText.get_rect()
+		temp1.center = SCREEN_RECT.center
+		quitText2 = font.render("Consider deeply, brainiac",1,(0,0,0))
+		temp2 = close.get_rect()
+		temp3 = temp2.copy()
+		temp2.center = (SCREEN_RECT.centerx-200,SCREEN_RECT.centery+100)
+		temp3.center = (SCREEN_RECT.centerx+200,SCREEN_RECT.centery+100)
+		screen.blit(quitText,(temp1.x,temp1.y-60))
+		screen.blit(quitText2,(temp1.x+120,temp1.y))
+		screen.blit(close,temp2)
+		screen.blit(yes,temp3)
+		if ct.clickInteract(temp2):
+			gamestate = "main"
+			quitTick = 0
+			pygame.mouse.set_pos(800,500)
+		if ct.clickInteract(temp3):
+			open("playersave.txt", "w").close()
+			quit()
 
 	#-------------------------------------- MAIN ----------------------------------------
 	if gamestate == "main":
@@ -259,29 +284,31 @@ while not doExit:
 	#-------------------- selling -------------------
 	elif gamestate == "selling":
 		screen.blit(invBgImg,(0,0))
-		temp5 = [100,1]
 		screen.blit(close, (20,20))
-		temp6 = 0
-		while temp6 < len(guy.inventory):
-			guy.inventory[temp6].invDisplay(screen,temp5)
-			if temp5[0] < 1300:
-				temp5[0]+=200
-			else: 
-				temp5[0] = 1
-				temp5[1] += 120
-			market.drawButtons(screen)
-			if ct.clickInteract(guy.inventory[temp6].invImgRect, pressDown):
-				market.selling(True)
-				sellwhat = temp6
-			if market.isSelling and ct.clickInteract(market.sharedRect, pressDown):
-				guy.money+=guy.inventory[sellwhat].price
-				guy.inventory.pop(sellwhat)
-				market.selling(False)
-				sellwhat = 0
-				temp6=-1
-			temp6+=1
+		if len(guy.inventory)>0:
+			temp5 = [100,1]
+			temp6 = 0
+			while temp6 < len(guy.inventory):
+				guy.inventory[temp6].invDisplay(screen,temp5)
+				if temp5[0] < 1300:
+					temp5[0]+=200
+				else: 
+					temp5[0] = 1
+					temp5[1] += 120
+				market.drawButtons(screen)
+				if ct.clickInteract(guy.inventory[temp6].invImgRect, pressDown):
+					market.selling(True)
+					sellwhat = temp6
+				if market.isSelling and ct.clickInteract(market.sharedRect, pressDown):
+					guy.money+=guy.inventory[sellwhat].price
+					guy.inventory.pop(sellwhat)
+					market.selling(False)
+					sellwhat = 0
+					temp6=-1
+				temp6+=1
+				ct.customCursor(screen)
 
-		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
+		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(cornerX):
 			market.select(True)
 			gamestate = "market"	
 	else:
@@ -297,6 +324,8 @@ while not doExit:
 				guy.inventory[temp6].toggleBigView(False)
 			newest = len(guy.inventory)-1
 			gamestate = "sub-inventory1"
+		else:
+			gamestate = "main"
 
 	#-------------------------------------- INVENTORY ----------------------------------------
 	if gamestate == "sub-inventory1":
@@ -320,19 +349,21 @@ while not doExit:
 			gamestate = "inventory"
 	if gamestate == "inventory":
 		screen.blit(invBgImg,(0,0))
-		temp5 = [100,1]
 		screen.blit(close, (20,20))
-		for temp6 in range(len(guy.inventory)):
-			guy.inventory[temp6].invDisplay(screen,temp5)
-			if temp5[0] < 1300:
-				temp5[0]+=200
-			else: 
-				temp5[0] = 1
-				temp5[1] += 120
-			if tutorials[0] == True:
-				if ct.clickInteract(guy.inventory[temp6].invImgRect, True, lambda: guy.inventory[temp6].toggleBigView(True)):
-					newest = temp6
-					gamestate = "sub-inventory2"
+		if len(guy.inventory) > 0:
+			temp5 = [100,1]
+			for temp6 in range(len(guy.inventory)):
+				guy.inventory[temp6].invDisplay(screen,temp5)
+				if temp5[0] < 1300:
+					temp5[0]+=200
+				else: 
+					temp5[0] = 1
+					temp5[1] += 120
+				if tutorials[0] == True:
+					if ct.clickInteract(guy.inventory[temp6].invImgRect, True, lambda: guy.inventory[temp6].toggleBigView(True)):
+						newest = temp6
+						gamestate = "sub-inventory2"
+				ct.customCursor(screen)
 		if get_pressed()[pygame.K_ESCAPE] or ct.clickInteract(Rect(20,20,65,65)):
 			gamestate = "main"
 		if tutorials[0] == False:
@@ -351,24 +382,41 @@ while not doExit:
 		version = fontBig.render(gameVersion,1,(0,0,0))
 
 		screen.blit(setMenuImg,menuRect2)
-		screen.blit(close,(1180,200))
-		screen.blit(version,(490,625))
-		screen.blit(unmuted,muteRect)
+		screen.blit(close,(1180,100))
+		screen.blit(version,(490,525))
 		screen.blit(quitButton,quitRect)
+		if isMuted:
+			screen.blit(muted,muteRect)
+		else:
+			screen.blit(unmuted,muteRect)
 
 
-		if 2+2 != 4:
+		if ct.clickInteract(muteRect,pressDown) and isMuted == False:
 			Music.Sound.set_volume(shop,0)
 			Music.music.set_volume(0)
 			mute(True)
-		elif 1+1 == 3:
-			mute(False)	
-		if ct.clickInteract(Rect(1180,200,60,60)) or get_pressed()[pygame.K_ESCAPE]:
+			isMuted = True
+		elif ct.clickInteract(muteRect,pressDown) and isMuted:
+			Music.Sound.set_volume(shop,1)
+			Music.music.set_volume(0.7)
+			mute(False)
+			isMuted = False
+		
+		if ct.clickInteract(Rect(555,655,480,56)):
+			gamestate = "wipe"
+
+
+		if ct.clickInteract(quitRect,pressDown):
+			gamestate = "quit"
+
+		if ct.clickInteract(Rect(1180,100,60,60)) or get_pressed()[pygame.K_ESCAPE]:
 			gamestate = "main"
 
 	ct.customCursor(screen)
 	ct.canClick = False
 	pygame.display.flip()
+
+
 
 for temp6 in range(len(guy.inventory)):
 	guy.money+=guy.inventory[temp6].price
@@ -377,5 +425,6 @@ guy.inventory.clear()
 savestate = guy.saveData()
 with open('playersave.txt','wb') as store_file:
 	pickle.dump(savestate,store_file)
+store_file.close()
 
 pygame.quit()

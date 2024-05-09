@@ -45,17 +45,20 @@ class FishingHole:
 			fish.append(prompt)
 			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
 
+			alert = font.render("PRESS THE KEYS! CATCH THE FISH!",1,(255,255,255))
+			screen.blit(alert,(100,200))
+
 			screen.blit(letterData[i][0],(letterData[i][1],letterData[i][2]))
 			
 		for j in range(length):
-			IPUT = 'void'
+			finput = 'void'
 			while True:
 				maxtime = length*1.8
 				for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						doExit = True
 
-				IPUT = self.inputs()
+				finput = self.inputs()
 
 				timer += delta/10
 
@@ -64,18 +67,20 @@ class FishingHole:
 
 				pygame.display.flip()
 
-				if IPUT == letterData[j][-1]:
+				if timer >= maxtime:
+					fail = True
+					break
+
+				if finput == letterData[j][-1]:
 					letterData[j][0] = font.render(letterData[j][-1],1,GREEN)
 					screen.blit(letterData[j][0],(letterData[j][1],letterData[j][2]))
 					correct.play()
 					break
-				if timer >= maxtime:
-					fail = True
-					break
+				
 			if fail:
 				break
 
-			player.append(IPUT)
+			player.append(finput)
 		if fail:
 			return False	
 		if player == fish:
@@ -204,7 +209,7 @@ class SellStation:
 		# self.bagPrice = [180, "SOLD OUT",1440,720,360]
 
 		self.baitImg = pygame.image.load("resources/bait.png")
-		self.baitPrice = 10
+		self.baitPrice = 20
 		self.baitDesc = [
 			"buy some bait",
 			"catch fish (maybe)",
