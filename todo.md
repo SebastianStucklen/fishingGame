@@ -10,6 +10,7 @@ create bait shop
         - deeper lake (more fish in lake)
         - better fish food (more fish on sleep)
         - fish toys (rarer fish population increased)
+        - fish breeding. make dictionary wuth fish in pond and bool if theyve bred today or not. (optimize lake. make cheap fish go extinct.)
     - PREGENERATE fish
         - view what fish are in pond
         - view % of max pop
