@@ -37,6 +37,7 @@ class FishingHole:
 		fail = False
 		screen.fill((0,0,0))
 		font = pygame.font.Font(None, 200)
+		font2 = pygame.font.Font(None,100)
 		for i in range(length):
 			prompt = random.choice(["F","I","S","H"])
 			if i > 0:
@@ -45,8 +46,8 @@ class FishingHole:
 			fish.append(prompt)
 			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
 
-			alert = font.render("PRESS THE KEYS! CATCH THE FISH!",1,(255,255,255))
-			screen.blit(alert,(100,200))
+			alert = font2.render("PRESS THE KEYS! CATCH THE FISH!",1,(255,255,255))
+			screen.blit(alert,(200,200))
 
 			screen.blit(letterData[i][0],(letterData[i][1],letterData[i][2]))
 			
@@ -209,13 +210,20 @@ class SellStation:
 		# self.bagPrice = [180, "SOLD OUT",1440,720,360]
 
 		self.baitImg = pygame.image.load("resources/bait.png")
-		self.baitPrice = 20
+		self.baitPrice = 15
 		self.baitDesc = [
 			"buy some bait",
 			"catch fish (maybe)",
 			f"cost: {self.baitPrice}",
 		]
-		
+		self.bonusBaitImg = pygame.image.load("resources/bonusBait.png")
+		self.bonusBaitPrice = [120,"SOLD OUT", 9720, 3240,1080,360]
+		self.bonusBaitDesc = [
+			"get more bait for the same price",
+			"too many worms :(",
+			# f"cost: {self.bonusBaitPrice}",
+		]
+		self.bonusBaitBought = 0
 
 		self.selecting = False
 		self.isSelling = False
@@ -341,6 +349,39 @@ class SellStation:
 			textRect = text.get_rect()
 			textRect.centerx = 1000
 			screen.blit(text, (textRect.x,line))
+			
+		screen.blit(close, (15, 15))
+
+	def bonusBaitPage(self,screen: pygame.Surface):
+		self.close = Rect(15, 15, 75,75)
+		screen.blit(self.bonusBaitImg, self.posterRect)
+		screen.blit(self.nextImg,self.nextRect)
+		screen.blit(self.buyImg,self.buyRect)
+
+		font = pygame.font.Font(None, 60)
+		line = 250-100
+
+		text = font.render(self.bonusBaitDesc[0],1,(255,250,190))
+			
+
+		for i in range(len(self.bonusBaitDesc)):
+			text = font.render(self.bonusBaitDesc[i],1,(255,250,190))
+			line+=64
+			textRect = text.get_rect()
+			textRect.centerx = 1000
+			screen.blit(text, (textRect.x,line))
+			
+		text = font.render(f"Cost: {self.bonusBaitPrice[self.bonusBaitBought]}",1,(255,250,190))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
+
+		text = font.render(f"# purchased: {abs(self.bonusBaitBought)}",1,(255,250,190))
+		line+=64
+		textRect = text.get_rect()
+		textRect.centerx = 1000
+		screen.blit(text, (textRect.x,line))
 			
 		screen.blit(close, (15, 15))
 

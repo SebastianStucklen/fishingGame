@@ -35,6 +35,7 @@ class Player:
 		self.chance = 0 # add 3
 		self.bagsize = 3 # add 3
 		self.maxspeed = 240 #add 60
+		self.baitBonus = 1
 
 		#Particle System by Twice_
 		self.dirt = ParticleEmitter(
@@ -194,7 +195,15 @@ class Player:
 	def baitUp(self,cost):
 		if self.money >= cost:
 			self.money -= cost
-			self.bait+=1
+			self.bait+=self.baitBonus
+			return True
+		else:
+			return False
+
+	def bonusUp(self,cost):
+		if self.money >= cost:
+			self.money -= cost
+			self.baitBonus+=1
 			return True
 		else:
 			return False

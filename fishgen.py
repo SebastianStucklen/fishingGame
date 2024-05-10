@@ -22,10 +22,10 @@ def fishgen(chance = 0) -> tuple[str, int]:
 	elif roll < -5+chance:
 		return ("Epic", 9)
 	
-	elif roll < 5+chance:
+	elif roll < 5+chance*2:
 		return ("Rare", 6)
 	
-	elif roll < 31+chance:
+	elif roll < 31+chance*3:
 		return ("Uncommon", 4)
 	
 	elif roll < 100:
