@@ -73,17 +73,17 @@ class Fishes:
 			imgRect.centerx = SCREEN_RECT.centerx
 			screen.blit(self.caughtImg,(imgRect.x,50))
 
-			text = font.render(self.description[0],1,(255,255,255))
+			text = font.render(self.description[0],1,(0,0,0))
 			
 
 			for i in range(len(self.description)):
-				text = font.render(self.description[i],1,(255,255,255))
+				text = font.render(self.description[i],1,(0,0,0))
 				line+=90
 				textRect = text.get_rect()
 				textRect.centerx = SCREEN_RECT.centerx
 				screen.blit(text, (textRect.x,line))
 			line+=90
-			text = font.render("press [esc] or the X to close",1,(255,255,255))
+			text = font.render("press [esc] or the X to close",1,(0,0,0))
 			textRect = text.get_rect()
 			textRect.centerx = SCREEN_RECT.centerx
 			screen.blit(text, (textRect.x, line))
@@ -102,7 +102,7 @@ class Fishes:
 			
 			
 			
-			text = font.render(self.description[0],1,(255,255,255))
+			text = font.render(self.description[0],1,(0,0,0))
 			textrect = text.get_rect()
 			textrect.centerx = imgRect.centerx
 			textrect.centery = pos[1] + (imgRect.height+10)
