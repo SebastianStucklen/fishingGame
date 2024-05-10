@@ -1,4 +1,4 @@
-gameVersion = "1.1.3"
+gameVersion = "1.1.3.1"
 
 
 import pickle
@@ -263,9 +263,12 @@ while not doExit:
 				marketpage = 1
 		elif marketpage == 1:
 			market.bonusBaitPage(screen)
-			ct.clickInteract(market.buyRect, pressDown, lambda: guy.bonusUp(market.baitPrice))
+			if ct.clickInteract(market.buyRect, pressDown, lambda: guy.bonusUp(market.bonusBaitPrice[market.bonusBaitBought])):
+				market.bonusBaitBought -= 1
+
 			if ct.clickInteract(market.nextRect, pressDown):
 				marketpage = 2
+
 		elif marketpage == 2:
 			market.chancePage(screen)
 			if market.chanceBought >= -4:
