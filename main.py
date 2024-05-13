@@ -30,7 +30,7 @@ yes = pygame.image.load('resources/yes.png').convert_alpha()
 cornerX = Rect(20,20,65,65)
 
 interactImg = pygame.image.load("resources/interact.png").convert_alpha()
-bgImage 	= pygame.image.load("resources/grass5.png").convert()
+bgImage 	= pygame.image.load("resources/grass5.png").convert_alpha()
 
 shopImg		= pygame.image.load("resources/shop1.png").convert_alpha()
 titleImg	= pygame.image.load("resources/title.png").convert()
@@ -91,7 +91,12 @@ try:
 	guy.loadData(temp4)
 except:
 	pass
-
+try:
+	with open("marketsave.txt", "rb") as load_file:
+		temp8 = pickle.load(load_file)
+	market.loadData(temp8)
+except:
+	pass
 
 screen.fill((153,217,234))
 
@@ -184,6 +189,7 @@ while not doExit:
 			pygame.mouse.set_pos(800,500)
 		if ct.clickInteract(temp3):
 			open("playersave.txt", "w").close()
+			open("marketsave.txt", "w").close()
 			quit()
 
 	#-------------------------------------- MAIN ----------------------------------------
@@ -199,9 +205,9 @@ while not doExit:
 
 
 		market.draw(screen)
-		home.draw(screen)
+		# home.draw(screen)
 
-		if lake.rect.colliderect(guy.rect) or home.rect.colliderect(guy.rect):
+		if lake.rect.colliderect(guy.rect):# or home.rect.colliderect(guy.rect):
 			guy.reverseVel()
 
 		guy.update(delta,screen)
@@ -430,8 +436,13 @@ for temp6 in range(len(guy.inventory)):
 guy.inventory.clear()
 
 savestate = guy.saveData()
+savestate2 = market.saveData()
 with open('playersave.txt','wb') as store_file:
 	pickle.dump(savestate,store_file)
+store_file.close()
+
+with open('marketsave.txt','wb') as store_file:
+	pickle.dump(savestate2,store_file)
 store_file.close()
 
 pygame.quit()

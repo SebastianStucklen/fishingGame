@@ -23,7 +23,7 @@ def mute(bewl:bool):
 class FishingHole:
 	
 	def __init__(self):
-		self.rect = Rect(90,470,580,360)
+		self.rect = Rect(90,470,520,360)
 	
 	def draw(self,screen):
 		draw.rect(screen, (0, 162, 232), self.rect)
@@ -229,6 +229,13 @@ class SellStation:
 		self.isSelling = False
 		self.isUpgrading = False
 
+	def saveData(self):
+		return [self.chanceBought, self.bagBought, self.bonusBaitBought]
+	
+	def loadData(self,save):
+		self.chanceBought = save[0]
+		self.bagBought = save[1]
+		self.bonusBaitBought = save[2]
 		
 	
 	def draw(self,screen):
