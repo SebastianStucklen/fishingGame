@@ -1,4 +1,4 @@
-gameVersion = "1.1.3.2"
+gameVersion = "1.2"
 
 import pickle
 
