@@ -42,7 +42,7 @@ class Player:
 			particleLifetime = 0.45,
 			initAttributes = [
 				["randYVelo", [-1800,0]],
-				["randColorChoice", [(56, 35, 23), (81,237,37),(185,122,87)]],
+				["randColorChoice", [(92, 39, 17), (207, 187, 155),(116, 49, 19)]],
 				["randSize", [8,16]]
 			],
 			updateAttributes = [
