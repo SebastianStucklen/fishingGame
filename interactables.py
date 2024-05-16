@@ -5,13 +5,18 @@ import random
 
 from pygame import Rect
 from pygame import draw
-from globals import SCREEN_RECT, WHITE, GREEN
+from globals import SCREEN_RECT, WHITE, GREEN, BLACK
 from pygame import mixer
 # mixer	.init()
 
 correct = mixer.Sound("resources/correct.wav")
 close = pygame.image.load('resources/close.png')
 tutorialBg = pygame.image.load('resources/tutorial.png')
+minigameBg = pygame.image.load('resources/minigameBg.png').convert_alpha()
+searchBg = pygame.image.load('resources/search.png').convert_alpha()
+searchBorder = pygame.image.load('resources/searchBorder.png').convert_alpha()
+shadow = pygame.image.load('resources/fishShadow.png').convert_alpha()
+
 mixer.Sound.set_volume(correct,0.8)
 
 def mute(bewl:bool):
@@ -24,10 +29,6 @@ class FishingHole:
 	
 	def __init__(self):
 		self.rect = Rect(90,470,520,360)
-	
-	def draw(self,screen):
-		draw.rect(screen, (0, 162, 232), self.rect)
-
 
 	def quicktime(self,screen,delta,length) -> bool:
 		letterData = []
@@ -36,6 +37,7 @@ class FishingHole:
 		timer = 0
 		fail = False
 		screen.fill((0,0,0))
+		screen.blit(minigameBg,(0,0))
 		font = pygame.font.Font(None, 200)
 		font2 = pygame.font.Font(None,100)
 		for i in range(length):
@@ -44,9 +46,9 @@ class FishingHole:
 				while prompt == letterData[i-1][-1]:
 					prompt = random.choice(["F","I","S","H"])
 			fish.append(prompt)
-			letterData.append([font.render(prompt,1,WHITE), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
+			letterData.append([font.render(prompt,1,BLACK), int((640//length) + i * ((SCREEN_RECT.w - 100) // length)), SCREEN_RECT.centery, prompt])
 
-			alert = font2.render("PRESS THE KEYS! CATCH THE FISH!",1,(255,255,255))
+			alert = font2.render("PRESS THE KEYS! CATCH THE FISH!",1,(BLACK))
 			screen.blit(alert,(200,200))
 
 			screen.blit(letterData[i][0],(letterData[i][1],letterData[i][2]))
@@ -64,7 +66,7 @@ class FishingHole:
 				timer += delta/10
 
 				draw.rect(screen, (255,0,0), ((0 + SCREEN_RECT.w / 4), (SCREEN_RECT.centery - 100), (SCREEN_RECT.w / 2), 50))
-				draw.rect(screen, (255,255,255), ((0 + SCREEN_RECT.w / 4 +timer * ((SCREEN_RECT.w / 2)/maxtime)), (SCREEN_RECT.centery - 100), (SCREEN_RECT.w / 2 - timer * ((SCREEN_RECT.w / 2)/maxtime)), 50))
+				draw.rect(screen, (GREEN), ((0 + SCREEN_RECT.w / 4 +timer * ((SCREEN_RECT.w / 2)/maxtime)), (SCREEN_RECT.centery - 100), (SCREEN_RECT.w / 2 - timer * ((SCREEN_RECT.w / 2)/maxtime)), 50))
 
 				pygame.display.flip()
 
@@ -105,6 +107,31 @@ class FishingHole:
 		else:
 			return "void"
 	
+	def fishSearch(self,screen, spotlight = 60, fishImg = shadow):
+		caughtFIsh = False
+		fishpos = Rect(random.randrange(300,980),random.randrange(50,580),160,72)
+		while not caughtFIsh:
+			for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						quit()
+
+			screen.blit(searchBg,(300,50))
+			screen.blit(fishImg,fishpos)
+			draw.circle(screen,(0,0,0),pygame.mouse.get_pos(),1900,(1900-spotlight))
+			screen.blit(searchBorder,(300,50))
+
+			if fishpos.collidepoint(pygame.mouse.get_pos()):
+				caughtFIsh = True
+				break
+			
+			pygame.display.flip()
+		if caughtFIsh:
+			return True
+		
+
+			
+
+
 def tutorial(screen):
 	running = 0
 	description = [

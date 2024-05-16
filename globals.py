@@ -9,7 +9,8 @@ SCREEN_RECT = Rect(0, 0, SCREEN_SIZE[0], SCREEN_SIZE[1])
 FPS = 60
 
 WHITE = (255,255,255)
-GREEN = (20,235,0)
+GREEN = (30, 215, 96)
+BLACK = (0,0,0)
 
 
 class CursorTools:

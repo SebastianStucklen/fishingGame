@@ -61,7 +61,6 @@ temp7 = font.render(f"V {gameVersion}",1,(0,0,0))
 ct = CursorTools(interactImg)
 
 guy = Player(1)
-
 lake = FishingHole()
 market = SellStation()
 marketpage = 0
@@ -223,6 +222,8 @@ while not doExit:
 			gamestate = "settings"
 		if ct.playerInteract(market.rect,guy.centerpos, lambda: market.select(True), 400, pressDown):
 			gamestate = "market"
+		
+		
 
 
 		if len(guy.inventory) >= guy.bagsize:
@@ -331,12 +332,15 @@ while not doExit:
 	#-------------------------------------- LAKE ----------------------------------------
 	if gamestate == "lake":
 		whatfish = fishgen(guy.chance)
-		if lake.quicktime(screen,delta,whatfish[1]):
-			guy.inventory.append(speciesGen(whatfish[0]))
-			for temp6 in range(len(guy.inventory)-1):
-				guy.inventory[temp6].toggleBigView(False)
-			newest = len(guy.inventory)-1
-			gamestate = "sub-inventory1"
+		if lake.fishSearch(screen):
+			if lake.quicktime(screen,delta,whatfish[1]):
+				guy.inventory.append(speciesGen(whatfish[0]))
+				for temp6 in range(len(guy.inventory)-1):
+					guy.inventory[temp6].toggleBigView(False)
+				newest = len(guy.inventory)-1
+				gamestate = "sub-inventory1"
+			else:
+				gamestate = "main"
 		else:
 			gamestate = "main"
 
