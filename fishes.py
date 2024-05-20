@@ -183,20 +183,6 @@ class Common4(Fishes):
 			"it's a bright yellow color",
 		]
 
-class Common6(Fishes):
-	baseImg = common5
-
-	def __init__(self, size: float):
-		super().__init__(size)
-
-		self.price = 30*size
-
-		self.description = [
-			#4 lines maximum
-			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
-			"this is a COMMON fish",
-			"it's an energetic red color",
-		]
 class Common5(Fishes):
 	baseImg = common5
 
@@ -212,6 +198,22 @@ class Common5(Fishes):
 			"it's a pleasant orange color",
 		]
 
+class Common6(Fishes):
+	baseImg = common6
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 30*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"this is a COMMON fish",
+			"it's an energetic red color",
+		]
+
+#-------------------------------------------------------------------------------------------------------------------
 class Uncommon1(Fishes):
 	baseImg = uncommon1
 
@@ -257,9 +259,26 @@ class Uncommon3(Fishes):
 			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
 			"this is an UNCOMMON fish",
 			"the fish cuddles up next to you",
-			"you'd feel really guilty if you sold it",
+			"it puts you in a pleasant mood",
 		]
 
+class Uncommon4(Fishes):
+	baseImg = uncommon4
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 64*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"this is an UNCOMMON fish",
+			"it looks scrumptious",
+			"yummy, even",
+		]
+
+#-------------------------------------------------------------------------
 class Rare1(Fishes):
 	baseImg = rare1
 
@@ -291,6 +310,22 @@ class Rare2(Fishes):
 			"you caught a bag of 3 fish!",
 			"hat trick! nice job.",
 		]
+
+class Rare3(Fishes):
+	baseImg = rare3
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 120*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"these are RARE fishes",
+			"it smiles at you",
+			"how cool!",
+		]		
 
 class Epic1(Fishes):
 	baseImg = epic1
@@ -324,6 +359,22 @@ class Epic2(Fishes):
 			"you can see right through it",
 		]
 
+class Epic3(Fishes):
+	baseImg = epic3
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 370*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"this is an EPIC fish",
+			"the horrors of mankind",
+			"have wrought many a terrible sight",
+		]
+
 class Legendary1(Fishes):
 	baseImg = legendary1
 
@@ -354,4 +405,20 @@ class Legendary2(Fishes):
 			"this is a LEGENDARY fish",
 			"the poor salmon got stuck",
 			"its a rare breed, worth tons",
+		]
+
+class Legendary3(Fishes):
+	baseImg = legendary3
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 850*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"this is a LEGENDARY fish",
+			"Its your cousin!",
+			"Mermarvin!",
 		]

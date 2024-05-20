@@ -1,5 +1,5 @@
-import random
-from fishes import Fishes, Common1, Common2, Common3, Common4, Common5, Uncommon1, Uncommon2, Uncommon3, Rare1, Rare2, Epic1, Epic2, Legendary1, Legendary2
+import random as rand
+from fishes import Fishes, Common1, Common2, Common3, Common4, Common5, Common6, Uncommon1, Uncommon2, Uncommon3, Uncommon4, Rare1, Rare2, Rare3, Epic1, Epic2, Epic3, Legendary1, Legendary2, Legendary3
 # Common (60.00% Base Drop Rate)   roll < 100
 # Uncommon (26.00% Base Drop Rate) roll < 40
 # Rare (10.00% Base Drop Rate)	   roll < 14
@@ -13,7 +13,7 @@ fishId = ""
 
 def fishgen(chance = 0) -> tuple[str, int]:
 
-	roll = random.random()
+	roll = rand.random()
 	roll *= 100
 	#[Rarity, Game rounds, fish id, money]
 	if roll < -8+chance:
@@ -35,40 +35,45 @@ def fishgen(chance = 0) -> tuple[str, int]:
 		return ("huh", 1)
 #FACTORY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def speciesGen(rarity: str) -> Fishes:
-	size = random.random()*1.3+0.7
+	size = rand.random()*1.3+0.7
 	match rarity:
 		case "Common":
-			species = random.choice([
+			species = rand.choice([
 				Common1,
 				Common2,
 				Common3,
 				Common4,
 				Common5,
+				Common6,
 			])
 			return species(size)
 		case "Uncommon":
-			species = random.choice([
+			species = rand.choice([
 				Uncommon1,
 				Uncommon2,
 				Uncommon3,
+				Uncommon4,
 			])
 			return species(size)
 		case "Rare":
-			species = random.choice([
+			species = rand.choice([
 				Rare1,
 				Rare2,
+				Rare3,
 			])
 			return species(size)
 		case "Epic":
-			species = random.choice([
+			species = rand.choice([
 				Epic1,
 				Epic2,
+				Epic3,
 			])
 			return species(size)
 		case "Legendary":
-			species = random.choice([
+			species = rand.choice([
 				Legendary1,
 				Legendary2,
+				Legendary3,
 			])
 			return species(size)
 		case _:
