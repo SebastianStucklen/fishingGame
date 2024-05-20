@@ -16,6 +16,8 @@ minigameBg = pygame.image.load('resources/minigameBg.png').convert_alpha()
 searchBg = pygame.image.load('resources/search.png').convert_alpha()
 searchBorder = pygame.image.load('resources/searchBorder.png').convert_alpha()
 shadow = pygame.image.load('resources/fishShadow.png').convert_alpha()
+rareShadow = pygame.image.load('resources/rareFishShadow.png').convert_alpha()
+font = pygame.font.Font(None, 52)
 
 mixer.Sound.set_volume(correct,0.8)
 
@@ -107,26 +109,44 @@ class FishingHole:
 		else:
 			return "void"
 	
-	def fishSearch(self,screen, spotlight = 60, fishImg = shadow):
-		caughtFIsh = False
-		fishpos = Rect(random.randrange(300,980),random.randrange(50,580),160,72)
-		while not caughtFIsh:
+	def fishSearch(self,screen, spotlight = 60):
+		caughtFish = False
+		caughtRare = False
+		fishPos = Rect(random.randrange(300,980),random.randrange(50,580),160,72)
+		rareFishPos = Rect(random.randrange(300,980),random.randrange(50,580),120,60)
+		tempText = font.render("find a fish!",1,(255,255,255))
+		temp1 = tempText.get_rect()
+		temp1.center = SCREEN_RECT.center
+		pygame.mouse.set_visible(False)
+		while not caughtFish:
 			for event in pygame.event.get():
 					if event.type == pygame.QUIT:
 						quit()
 
 			screen.blit(searchBg,(300,50))
-			screen.blit(fishImg,fishpos)
+			screen.blit(shadow,fishPos)
+			screen.blit(rareShadow,rareFishPos)
 			draw.circle(screen,(0,0,0),pygame.mouse.get_pos(),1900,(1900-spotlight))
 			screen.blit(searchBorder,(300,50))
+			screen.blit(tempText,(temp1.x,temp1.y+300))
 
-			if fishpos.collidepoint(pygame.mouse.get_pos()):
-				caughtFIsh = True
+			if fishPos.collidepoint(pygame.mouse.get_pos()):
+				caughtFish = True
+				break
+			if rareFishPos.collidepoint(pygame.mouse.get_pos()):
+				caughtFish = True
+				caughtRare = True
 				break
 			
 			pygame.display.flip()
-		if caughtFIsh:
-			return True
+		if caughtFish:
+			pygame.mouse.set_visible(True)
+			if caughtRare:
+				return [True, True]
+			else:
+				return [True, False]
+		else:
+			return [False, False]
 		
 
 			

@@ -14,19 +14,24 @@ common2 = image.load('resources/common2.png').convert_alpha()
 common3 = image.load('resources/common3.png').convert_alpha()
 common4 = image.load('resources/common4.png').convert_alpha()
 common5 = image.load('resources/common5.png').convert_alpha()
+common6 = image.load('resources/common6.png').convert_alpha()
 
 uncommon1 = image.load('resources/uncommon1.png').convert_alpha()
 uncommon2 = image.load('resources/uncommon2.png').convert_alpha()
 uncommon3 = image.load('resources/uncommon3.png').convert_alpha()
+uncommon4 = image.load('resources/uncommon4.png').convert_alpha()
 
 rare1 = image.load('resources/rare1.png').convert_alpha()
 rare2 = image.load('resources/rare2.png').convert_alpha()
+rare3 = image.load('resources/rare3.png').convert_alpha()
 
 epic1 = image.load('resources/epic1.png').convert_alpha()
 epic2 = image.load('resources/epic2.png').convert_alpha()
+epic3 = image.load('resources/epic69.png').convert_alpha()
 
 legendary1 = image.load('resources/legendary1.png').convert_alpha()
 legendary2 = image.load('resources/legendary2.png').convert_alpha()
+legendary3 = image.load('resources/legendary3.png').convert_alpha()
 
 
 
@@ -178,6 +183,20 @@ class Common4(Fishes):
 			"it's a bright yellow color",
 		]
 
+class Common6(Fishes):
+	baseImg = common5
+
+	def __init__(self, size: float):
+		super().__init__(size)
+
+		self.price = 30*size
+
+		self.description = [
+			#4 lines maximum
+			f"{round(size*12,2)} inches  |  {round(self.price)} Fishens",
+			"this is a COMMON fish",
+			"it's an energetic red color",
+		]
 class Common5(Fishes):
 	baseImg = common5
 

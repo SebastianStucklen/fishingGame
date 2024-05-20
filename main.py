@@ -1,4 +1,4 @@
-gameVersion = "1.2"
+gameVersion = "1.2.1"
 
 import pickle
 
@@ -329,10 +329,15 @@ while not doExit:
 		Music.Sound.stop(shop)
 		Music.music.unpause()
 		
-	#-------------------------------------- LAKE ----------------------------------------
+	#--------------------------------------------- LAKE ----------------------------------------------
 	if gamestate == "lake":
-		whatfish = fishgen(guy.chance)
-		if lake.fishSearch(screen):
+		
+		fishFound = lake.fishSearch(screen)
+		if fishFound[0]:
+			if fishFound[1]:
+				whatfish = fishgen(guy.chance+6)
+			else:
+				whatfish = fishgen(guy.chance)
 			if lake.quicktime(screen,delta,whatfish[1]):
 				guy.inventory.append(speciesGen(whatfish[0]))
 				for temp6 in range(len(guy.inventory)-1):
@@ -344,7 +349,7 @@ while not doExit:
 		else:
 			gamestate = "main"
 
-	#-------------------------------------- INVENTORY ----------------------------------------
+	#----------------------------------------- INVENTORY ----------------------------------------
 	if gamestate == "sub-inventory1":
 		screen.fill((70, 130, 10))
 		if guy.inventory[newest].bigView == True:
